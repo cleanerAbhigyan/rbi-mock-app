@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+package-lock.json
+test-results/
+playwright-report/
+# Preserve published Codex prompts verbatim; they are archived task inputs.
+docs/prompts/
