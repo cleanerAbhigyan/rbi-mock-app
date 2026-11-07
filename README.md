@@ -35,6 +35,50 @@ No environment variables, accounts, database, or backend are required.
 | `npm run preview`      | Serve a production build locally                   |
 | `npm run format:check` | Check Prettier formatting                          |
 | `npm run format`       | Apply Prettier formatting                          |
+| `npm run test:e2e`     | Playwright desktop/mobile Chromium journeys        |
+| `npm run test:e2e:ui`  | Playwright interactive test runner                 |
+
+## Implemented — Phase 1B timed practice
+
+Choose **Try Timed Practice** on the dashboard. The new flow is
+`/demo/timed/instructions` → `/demo/timed/exam` → `/demo/timed/results`.
+The existing untimed demo below remains available.
+
+- **CUSTOM TIMED PRACTICE — NOT OFFICIAL RBI EXAM PATTERN**: the same 12 original
+  demo questions, three per section; General Awareness → English Language →
+  Quantitative Aptitude → Reasoning Ability. Each custom section lasts **60 seconds**
+  (four minutes total). Correct = **+1**, incorrect = **−0.25**, unanswered = **0**.
+  These are example settings, not an official RBI scheme or confirmed 2027 rules.
+- The clock starts on acknowledgment and Begin Timed Mock. Absolute section
+  deadlines are calculated once. Expired sections lock; future sections cannot be
+  entered early. Save/Next stays inside the active section until its deadline.
+- Refresh and reopening reconcile the original schedule, including multiple missed
+  boundaries. Saved answers/flags survive; unsaved drafts are discarded. Only one
+  latest timed attempt is stored in this browser, not a full history.
+- Submit Exam opens a keyboard-accessible final confirmation. Cancel continues the
+  clock; confirmation freezes answers. Final expiry submits automatically, even
+  after returning from an inactive tab or refreshing. Repeated submission is inert.
+- Results score **only saved responses**, including answered-and-reviewed ones.
+  Totals, attempted/correct/incorrect/unanswered counts, accuracy, section breakdown
+  and solutions appear only after submission and remain available after refresh.
+- Corrupt/incompatible local data is not scored; an explicit reset is offered.
+  Storage failures are reported. Starting another timed mock after completion replaces the
+  previous record. An active mock cannot be restarted to reset its clock.
+
+The local-first clock is not a security guarantee against deliberate clock/storage
+manipulation. Use one active tab; localStorage is not a transactional multi-tab
+service. No official cutoffs, rankings, qualifications or predictions are computed.
+
+Install the browser once, then run the deterministic browser journeys:
+
+```sh
+npx playwright install --with-deps chromium
+npm run test:e2e
+```
+
+Playwright controls the browser clock to test real production durations quickly;
+there is no timing-bypass URL or production test profile. Tests cover desktop and
+mobile Chromium. Screenshots/traces in ignored `test-results/` are test artifacts.
 
 ## Implemented — Phase 1A interaction demo
 
@@ -70,14 +114,15 @@ and the test-only `src/data/fixtures` directory.
 - Strict versioned Zod question schemas, scored/PYQ admission gates, atomic local
   repository loader, and isolated synthetic test fixtures.
 - Shared contracts for profiles, draft/saved responses, five palette statuses and
-  review flags; timed attempts and results remain future contracts.
+  review flags; Phase 1B adds a strict versioned timed-attempt contract and results.
 - Automated UI/schema/repository tests and GitHub Actions for lint, types, formatting,
   tests and build. No deployment workflow.
 
 React 19 + TypeScript + Vite, Tailwind CSS 4, React Router, Zustand and Zod form the
 client stack. Vitest, React Testing Library, ESLint and Prettier support development.
-State is in memory; Phase 0 does **not** save personal attempts or implement offline
-installation. Tailwind utilities are supplemented by responsive component CSS.
+The untimed demo is in memory. Timed practice uses validated localStorage; no cloud
+storage or offline installation is implemented. Tailwind utilities are supplemented
+by responsive component CSS.
 
 ## Architecture
 
@@ -85,16 +130,18 @@ installation. Tailwind utilities are supplemented by responsive component CSS.
 src/
   app/                         App and route composition
   components/{layout,ui}/      Shared shell and exam-profile notice
-  features/{exam,questions}/   Demo UI, pure transitions, profiles, repository contracts
+  features/{exam,questions}/   Untimed/timed UI, pure engines, persistence/scoring, contracts
   data/demo/                   Validated runtime demo provider, separate from PYQs
   data/fixtures/               Synthetic developer content, tests only
   data/question-bank/          Empty catalog and validated local adapter
-  schemas/                    Versioned Zod validation and inferred question types
-  stores/                     In-memory catalog and demo-session Zustand stores
+  schemas/                    Question and persisted timed-attempt Zod contracts
+  stores/                     Catalog, untimed session and timed storage/clock adapters
   types/                      Future exam-engine contracts
   styles/                     Foundation and candidate-interface responsive CSS
   main.tsx                    Browser entry point
 tests/                        Rendered-route and data-boundary tests
+e2e/                          Playwright journeys and screenshot capture
+playwright.config.ts          Desktop/mobile Chromium, local test server
 .github/workflows/ci.yml       Push/PR checks
 docs/                         Architecture, contract, roadmap, log and prompt history
 ```
@@ -106,10 +153,9 @@ empty placeholder modules are intentionally absent. The UI reads through
 
 ## Planned features
 
-Phase 1B will add profile-driven timing, section locks, refresh-safe deadlines,
-submission, objective scoring and end-to-end browser coverage. Later phases add
-reviewed real-PYQ intake, official-source profiles, persistent history, Phase II
-and analytics. Phase 1 as a whole is not complete. See the [Roadmap](docs/ROADMAP.md).
+Next phases add reviewed real-PYQ intake, official-source profiles, completed-attempt
+history, Phase II and analytics. The complete RBI simulator is not finished merely
+because the custom Phase I demos work. See the [Roadmap](docs/ROADMAP.md).
 
 **Question policy:** verified, reviewed, source-attributed historical PYQs are the intended real question source. If none are imported, show an empty state. Developer fixtures remain test-only. Original runtime demonstration content has a separate provider and explicit demo labels. Never fabricate or relabel PYQs.
 
@@ -117,8 +163,8 @@ The 2027 RBI examination pattern remains unconfirmed until an official notice; u
 
 ## Development status
 
-Phase 0 and the Phase 1A interaction demo are implemented and locally checked; the
-complete simulator is not implemented. Verification evidence and limits are recorded in the
+Phases 0, 1A and 1B are implemented and tested as custom practice. The complete
+official-source simulator is not implemented. Verification evidence and limits are recorded in the
 [Development log](docs/DEVELOPMENT_LOG.md). See [Project context](docs/PROJECT_CONTEXT.md),
 [Changelog](CHANGELOG.md) and [Agent instructions](AGENTS.md).
 

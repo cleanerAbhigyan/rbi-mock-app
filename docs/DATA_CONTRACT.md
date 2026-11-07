@@ -87,8 +87,9 @@ All demo records use `source.category: original-practice`, `year: null`,
 synthetic source citation and no original question number. Their existing
 `usage: catalog` value means runtime content rather than developer fixtures; it
 does not grant approval. They fail both scored and verified-PYQ admission.
-Demo weights (one mark, zero penalty) are custom example metadata; no scoring is
-performed and they are not official RBI rules.
+Untimed demo weights (one mark, zero penalty) remain custom metadata and are not
+scored in Phase 1A. The separate timed profile below configures its own weights;
+neither set of values represents official RBI rules.
 
 `createDemoQuestionRepository(unknown)` first applies a stricter extension of the
 existing objective schema, requiring the demo metadata above and the four named
@@ -128,3 +129,57 @@ Unknown source types must be rejected rather than coerced to historical PYQs.
 No sibling source imports, shared runtime package, predictor API, JSON import UI,
 CSV/PDF extraction or Notion synchronization is implemented. This document describes
 the future boundary without promising those capabilities in Phase 1A.
+
+## Phase 1B timed attempt contract 1.0
+
+`schemas/timed-attempt.ts` is a new independent persistence contract; the question
+schema 1.0 and all actual-PYQ/scored-catalog admission rules remain unchanged.
+The storage key is `rbi-mock-app:timed-practice:v1`. Its one JSON record contains:
+
+- Attempt ID/schema version and full profile ID/revision/source/section/marking snapshot.
+- Candidate question snapshots: stable ID/revision, section, text/options and weights.
+- Start time, last observed time, immutable cumulative section start/deadline schedule.
+- Active section index, active question ID, unique visited IDs, saved responses
+  (question ID/revision, option ID, ISO save timestamp) and independent review flags.
+- Status (`in-progress` or `submitted`), nullable submission timestamp and reason
+  (`manual` or `timeout`). There is no draft, answer key, explanation or result cache.
+
+Restoration strictly validates shape/version, exact current profile/question snapshots,
+original schedule, active index, visit/lock invariants, key membership and response
+revision/option/time validity. Active records cannot claim submission metadata;
+submitted records must have consistent timestamps/reasons. Reopening reconciles
+against the original schedule, including final expiry. Unknown/stale/corrupt data
+is never silently repaired or scored: the UI explains and offers explicit reset.
+A restored editor always starts from its committed response; an unsaved selection
+cannot become a saved or scored answer merely through refresh.
+
+Only the latest record is retained. A completed result is derived on demand from
+that submitted record and survives refresh; starting another completed mock replaces
+it after acknowledgment. No unlimited local history or cloud synchronization exists.
+Storage failures are visible. Use one active tab; this client-side format is neither
+cryptographically authenticated nor a protection against deliberate clock/storage
+manipulation. Do not export personal attempts into the public repository.
+
+## Internal synthetic scoring boundary
+
+The original runtime demonstration records remain `original-practice`, unverified,
+pending, year-null, and excluded from `verifiedPyqSchema`/`scoredQuestionSchema`.
+Phase 1B explicitly permits scoring these synthetic demonstrations through a
+**separate** internal provider that validates keys/explanations and original source
+category. That permission is not historical authenticity, human approval or catalog
+admission. No predictor/generated-question integration was added.
+
+The custom timed profile (`phase-i-custom-timed-v1`, revision 1) configures four
+60-second sequential-locked sections, +1 for correct, −0.25 for incorrect and zero
+for unanswered. Candidate projections carry these configured weights without keys.
+The original untimed source data and zero-penalty metadata are unchanged. The scorer
+uses each attempted question's snapshot weights; explicitly zero penalties are
+supported. Up to two decimal places are validated, summed as integer hundredths,
+then converted for display. Accuracy is correct/attempted × 100, rounded to two
+decimal places, or 0 when none were attempted. Section totals reconcile with the
+whole result. Saved-and-reviewed is attempted; review-only and drafts are not.
+
+Key/content/scoring changes require revision bumps. Results are gated on actual
+final submission, including when entering the results URL directly. Only then are
+saved answer, correct answer, outcome and explanation projected to the review UI.
+No official cutoffs, ranks, percentiles or qualification claims are computed.

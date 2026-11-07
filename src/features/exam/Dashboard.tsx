@@ -8,7 +8,7 @@ const examOptions = [
     number: '01',
     title: 'RBI Grade B — Phase I',
     detail:
-      'Full timed mock exams are planned. Try the separate interaction demo above.',
+      'Source-verified full exam profiles are planned. Try a separate custom demo above.',
     label: 'Phase I practice',
   },
   {
@@ -40,6 +40,24 @@ export function Dashboard() {
         </p>
       </div>
       <PatternNotice />
+      <section
+        className="demo-entry panel"
+        aria-labelledby="timed-entry-heading"
+      >
+        <div>
+          <p className="eyebrow">
+            CUSTOM TIMED PRACTICE — NOT OFFICIAL RBI EXAM PATTERN
+          </p>
+          <h2 id="timed-entry-heading">Try a timed custom mock</h2>
+          <p>
+            12 original demo questions, sequential section deadlines, refresh
+            recovery, submission and scored review.
+          </p>
+        </div>
+        <Link className="primary-button" to="/demo/timed/instructions">
+          Try Timed Practice
+        </Link>
+      </section>
       <section
         className="demo-entry panel"
         aria-labelledby="demo-entry-heading"
@@ -115,10 +133,11 @@ export function Dashboard() {
           </section>
         </div>
         <aside className="readiness-panel" aria-labelledby="readiness-heading">
-          <span className="foundation-badge">PHASE 1A</span>
+          <span className="foundation-badge">PHASE 1B</span>
           <h2 id="readiness-heading">A deliberate start.</h2>
           <p>
-            The interaction demo is ready. Timed and scored exams come later.
+            Untimed interaction and timed custom practice are ready. Verified
+            exam content comes next.
           </p>
           <ol className="milestones">
             <li>
@@ -137,9 +156,9 @@ export function Dashboard() {
               </span>
               <div>
                 <h3>Phase I experience</h3>
-                <p>Demo navigation, draft and saved answers, and review.</p>
+                <p>Custom demo timing, saved answers, submission and review.</p>
                 <span className="step-state">
-                  Interaction demo available · timing planned
+                  Untimed and timed demos available
                 </span>
               </div>
             </li>
@@ -155,7 +174,7 @@ export function Dashboard() {
             </li>
           </ol>
           <div className="readiness-note">
-            No mock attempts or performance results exist yet.
+            No real-PYQ mock history or performance analytics are populated.
           </div>
         </aside>
       </div>

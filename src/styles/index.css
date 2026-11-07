@@ -445,6 +445,12 @@ button:disabled {
 .skip-link:focus {
   top: 12px;
 }
+.skip-link:not(:focus) {
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
 .catalog-panel {
   padding: 28px;
 }

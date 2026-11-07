@@ -5,6 +5,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   test: {
+    include: ['tests/**/*.test.{ts,tsx}'],
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     clearMocks: true,

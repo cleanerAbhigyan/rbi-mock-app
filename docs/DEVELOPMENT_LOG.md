@@ -236,3 +236,119 @@ are reviewed. Phase 1 as a whole remains incomplete.
 - This follow-up documentation commit records the now-known implementation SHA,
   push/PR evidence and CI result. Its own final SHA and verified push are reported
   in the completion message to avoid a self-referential commit ID.
+
+## 2026-11-07 — Phase 1B: Timed Mock Examination Engine
+
+Prompt: [sanitized implementation brief](prompts/2026-11-07-phase-1b-timing-submission-scoring.md).
+Branch: `feat/phase-0-foundation`, existing PR #1. Starting worktree was clean at
+`8192ba09464d2e2c6c2177d443ac97744e075368`; fetched comparison was 0 ahead / 0 behind,
+and fast-forward pull was already up to date. No branch/PR was created or merged.
+Read current repository documentation and actual Phase 1A implementation/tests;
+rechecked the Notion product specification without modifying it.
+
+### Implemented scope and decisions
+
+- Separate dashboard entry and `/demo/timed/instructions`, `/demo/timed/exam`,
+  `/demo/timed/results` routes preserve all untimed behavior and routes.
+- Versioned custom profile: original 12 demo questions, four sequential locked
+  sections, 60 seconds each, +1 correct / −0.25 incorrect / zero unanswered.
+  These values are custom examples, not official RBI/2027 rules.
+- Absolute cumulative deadlines originate at Begin Timed Mock. Every command
+  reconciles elapsed windows first; at an exact deadline expiry wins over save.
+  Delayed/backgrounded/reopened pages skip elapsed sections without fresh time.
+  Final expiry stamps submission at the original final deadline.
+- Only the active section accepts editing/navigation. Phase 1A's pure transitions
+  operate on its question subset; Save/Next clamps at its boundary. Stale editor
+  events are rejected after clock ticks or navigation. Old saved answers survive.
+- A strict Zod attempt DTO persists profile/question snapshots, revisions, original
+  schedule, observed time, active/visited IDs, saved responses, flags and final
+  metadata. Drafts/keys/solutions are not serialized. Refresh restores saved choices,
+  discards drafts and reconciles timing. Corrupt/stale/inconsistent data is not
+  scored and requires explicit recovery of this app's one storage key.
+- Native modal confirmation supports focus containment, Escape/cancel and final
+  confirmation while the clock continues. Finalized responses are immutable to
+  ticks/commands, and repeated submission does not change timestamps or duplicate
+  result records. Results are pure derivations from the one latest submitted record.
+- Separate internal demo-key validation permits scoring synthetic practice without
+  granting scored-catalog/PYQ approval. The scorer uses snapshot weights in integer
+  hundredths and counts saved-and-reviewed normally; draft/review-only is unanswered.
+  Results include totals, accuracy, sections, saved/correct answers and explanations
+  only after submission. The latest result survives reload; new practice replaces it.
+- Preserved the empty real bank, original synthetic source records, test-only fixtures,
+  question schema/catalog gates and untimed domain logic. No backend, deployment,
+  scraping, official profiles, Phase II, predictor or Notion writes.
+
+### Changed files
+
+- Engine/data contracts: `src/features/exam/timed/profile.ts`, `engine.ts`,
+  `persistence.ts`, `scoring.ts`, `src/schemas/timed-attempt.ts`,
+  `src/data/demo/demo-scoring-repository.ts`, `src/stores/timed-practice-store.ts`.
+- Timed presentation: `TimedInstructions.tsx`, `TimedExam.tsx`, `TimedResults.tsx`,
+  `TimedRecovery.tsx`, `SubmissionDialog.tsx`, `use-timed-lifecycle.ts` under
+  `src/features/exam/timed`; shared `QuestionEditor.tsx` gained backward-compatible
+  timed labels/boundary text. Dashboard, router, AppLayout titles/footer and main
+  style imports were updated; added `src/styles/timed.css`.
+- Responsive QA fix: `src/styles/index.css` clips the unfocused skip link, preserving
+  its keyboard-visible state and preventing it appearing in full-page mobile captures.
+- Tests: `tests/timed-engine.test.ts`, `tests/timed-store.test.ts`,
+  `tests/timed-app.test.tsx`, `e2e/timed-practice.spec.ts`, `playwright.config.ts`.
+- Tooling: package/lock add Playwright 1.65; scripts, tsconfig, Vitest include,
+  artifact ignore rules, and existing CI now install Chromium and run browser tests.
+- Docs: README, AGENTS, PROJECT_CONTEXT, ARCHITECTURE, DATA_CONTRACT, ROADMAP,
+  CHANGELOG, this log and the archived prompt. AGENTS clarifies the explicit
+  synthetic scoring exception and required deadline/persistence invariants.
+
+### Actual local validation
+
+Node 24.22.2 LTS (existing temporary runtime under `/tmp`), npm 9.2.0. Playwright's
+Chromium and Linux dependencies were installed through the explicitly approved
+browser-testing workflow; no binaries or artifacts are committed.
+
+| Check                                     | Outcome                                                                                                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm ci`                                  | Passed from updated lockfile; 248 packages installed                                                                                       |
+| `npm run lint`                            | Passed, zero warnings                                                                                                                      |
+| `npm run typecheck`                       | Passed, including Playwright config and E2E sources                                                                                        |
+| `npm run format` / `npm run format:check` | Formatting applied and checked before commit                                                                                               |
+| `npm test`                                | Passed: 126 tests in 8 files; all 79 prior tests retained, 47 new tests                                                                    |
+| `npm run build`                           | Passed: 157 modules; JS 404.10 kB (122.51 kB gzip), CSS 23.48 kB (6.20 kB gzip)                                                            |
+| `npm run test:e2e`                        | Passed: 8 journeys, desktop Chromium and Pixel 7/mobile Chromium                                                                           |
+| Browser QA                                | Inspected exam/results screenshots at desktop/mobile; no horizontal page overflow; results table scrolls within its panel                  |
+| Local launch                              | Playwright-managed Vite server launched successfully and was stopped by the runner                                                         |
+| Scope/isolation                           | Real catalog, fixtures, original demo source, question schema and untimed engine unchanged; fixture IDs/text absent from production bundle |
+| Secret/material review                    | Scoped common token/private-key/environment-file checks passed; no private attempts or source papers added                                 |
+| `git diff --check`                        | Passed                                                                                                                                     |
+
+Domain/store/UI coverage includes profile initialization/order, countdown start,
+clock jumps/backwards observations, exact-deadline races, past/future locks, reopening
+across several windows, saved/draft/flag recovery, corrupt data, storage failures,
+manual cancellation/confirmation, idempotent finalization, post-submit immutability,
+decimal/zero penalties, saved ID/revision validation, pre-submit guards and result
+refresh. Browser tests exercise real production durations through Playwright's
+controlled clock; no production bypass or shorter test route was introduced.
+
+Initial timed component tests exposed an async user-event/fake-timer scheduling
+conflict. Restricting fake time to Date/intervals fixed the harness; no failing tests
+remain. Browser screenshot inspection found an offscreen skip-link capture artifact,
+which was corrected without removing keyboard access. Browser verification is
+Chromium-only; WebKit/Firefox were not tested.
+
+### Limitations and next milestone
+
+Local clock/storage cannot prevent deliberate manipulation. Last-observed time is
+monotonic within a record, but this is not an anti-cheating security mechanism.
+Use one active tab: storage events refresh other views, but localStorage writes
+are not transactional. Storage failures are visible and can prevent recovery of
+recent responses/finalization. Only one latest record exists, not historical analytics.
+
+Next: Phase 2 source-reviewed official profiles and legally redistributable PYQ
+intake with human provenance/key/scoring approval and deduplication. The real bank
+stays empty until actual approved content exists. Phase II, full history/analytics,
+predictor integration, accounts, deployment and Notion synchronization remain planned.
+
+### Commit / GitHub evidence
+
+Implementation commit subject: `feat: implement Phase 1B timed demo and scoring`.
+Source, tests, current docs and sanitized prompt are committed together. Exact SHA,
+verified push, existing PR #1 head and fresh CI result are recorded after creation;
+this pre-commit record does not assume a successful push.

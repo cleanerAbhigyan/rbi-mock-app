@@ -13,6 +13,9 @@ export function AppLayout() {
           '/question-bank': 'Question bank',
           '/demo/instructions': 'Demo instructions',
           '/demo/exam': 'Phase I demo',
+          '/demo/timed/instructions': 'Timed practice instructions',
+          '/demo/timed/exam': 'Timed practice',
+          '/demo/timed/results': 'Timed practice results',
         } as Record<string, string>
       )[pathname] ?? 'Page not found';
     document.title = `${title} | RBI Grade B Mock Exam Simulator`;
@@ -63,7 +66,7 @@ export function AppLayout() {
           Independent personal practice. Not official RBI or IBPS software; not
           affiliated with or endorsed by either organization.
         </p>
-        <span>Phase 1A · Interaction demo</span>
+        <span>Phase 1B · Custom practice</span>
       </footer>
     </div>
   );

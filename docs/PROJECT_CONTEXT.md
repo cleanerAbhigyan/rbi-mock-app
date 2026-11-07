@@ -1,7 +1,7 @@
 # Project Context — Exam Simulator
 
-_Updated 2026-11-07 (America/Los_Angeles): Phase 0 foundation and Phase 1A
-untimed, unscored candidate interaction demo are implemented. Phase 1B remains planned._
+_Updated 2026-11-07 (America/Los_Angeles): Phases 0, 1A and 1B implement the
+foundation, untimed interaction demo and separate custom timed/scored practice._
 
 ## Project
 
@@ -27,7 +27,8 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
 - Standalone React/TypeScript/Vite application with Tailwind CSS, React Router,
   Zustand, Zod, Vitest/Testing Library, ESLint and Prettier; npm lockfile, Node 24 LTS.
 - Routes `/` (dashboard), `/question-bank` (catalog), `/demo/instructions` and
-  guarded `/demo/exam`, plus a recoverable not-found screen.
+  guarded `/demo/exam`, and separate `/demo/timed/{instructions,exam,results}`
+  routes, plus a recoverable not-found screen.
 - The full exam options remain unavailable. A separate **Try Phase I Demo** link
   opens instructions and a required agreement before beginning a fresh session.
 - Empty verified-PYQ catalog and count **0**; no papers were imported from Notion.
@@ -40,7 +41,8 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
   historical authenticity; it never enters the application catalog.
 - Twelve original runtime demo questions (three per Phase I section) use a
   separate validated provider and explicit synthetic labels. They are unverified
-  and pending approval for scoring; neither scored nor PYQ admission was changed.
+  and pending for catalog approval; neither scored nor PYQ admission was changed.
+  A separate internal validated-key provider permits scoring synthetic timed practice only.
 - Pure immutable demo transitions separate visits, active draft, saved response
   records and independent review flags. All five statuses/counts are derived.
 - Palette/section/previous/next navigation discards unsaved edits and restores
@@ -48,11 +50,20 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
   Clear keeps review flags, and save keeps flags until explicitly removed.
 - Candidate data excludes keys/explanations and topic hints. Section tabs and radio
   controls support keyboard navigation; the last question never auto-submits.
-- Shared profile/response/status types support the interaction demo. Timed
-  ExamAttempt and ExamResult remain future contracts. Null section duration
-  explicitly represents the custom untimed profile; no official 2027 scheme.
+- Shared profile/response/status types support both demos. A separate strict timed
+  contract implements absolute deadlines, sequential section locks and versioned
+  local persistence. Null section duration still represents the untimed profile.
+- Custom timed profile revision 1: four 60-second sections, +1 correct, −0.25 wrong,
+  zero unanswered; no official 2027 rules. Only the current section can be edited.
+- Every command reconciles elapsed deadlines first; skipped windows never grant
+  extra time. At final expiry the original final deadline stamps submission.
+- Saved answers/flags, profile/question snapshots and schedule survive refresh;
+  drafts do not. Bad or stale storage is quarantined with explicit reset recovery.
+- Manual confirmation and automatic timeout finalize idempotently. Results score
+  saved answers only using integer hundredths, and reveal solutions after submission.
+  The latest completed record survives refresh; starting another replaces it.
 - CI checks lint/types/format/tests/build on push and pull request, with read-only
-  repository permissions and no deployment.
+  repository permissions, desktop/mobile Playwright Chromium journeys and no deployment.
 
 ## Current structure
 
@@ -68,17 +79,17 @@ and supplies commit timestamps. `schemas`, `stores`, `types`, `styles` and `main
 cover validation, in-memory read state, future contracts, appearance and startup.
 `tests` holds UI and data tests. `.github/workflows/ci.yml` runs checks. `docs`
 contains the architecture, data contract, roadmap, development log and sanitized
-prompt. Unused results/lib directories have not been created.
+prompt. `features/exam/timed` owns engine, persistence, scoring and timed UI;
+`schemas/timed-attempt.ts` defines the strict DTO, and `stores/timed-practice-store.ts`
+injects clock/storage/IDs. `e2e` and `playwright.config.ts` exercise real Chromium.
+No empty modules or backend services have been created.
 
 ## Not implemented / next milestone
 
-Phase 1B: add profile-driven timing/section locks, refresh-safe deadlines, explicit
-submission and objective scoring, with browser end-to-end tests. The current demo
-has no countdown, submission, scoring, completed history or persistent attempts.
-Reloading clears the session; navigating away discards its draft. Beginning again
-clears the old session. No import UI, descriptive editor, analytics, backend,
-deployment or Notion synchronization exists. Real scored PYQs still require human
-review of provenance, answer keys, scoring and redistribution rights.
+Next: reviewed source-backed profiles and human-approved PYQ intake, without
+scraping or claiming unverified 2027 rules. Full history/analytics, Phase II,
+prediction/import integration, accounts, cloud services, deployment and Notion
+synchronization remain deferred. Only one latest timed record is retained.
 
 ## Important decisions and verification
 
@@ -88,16 +99,24 @@ review of provenance, answer keys, scoring and redistribution rights.
   scored eligibility; review-stage null keys/scoring remain outside scored banks.
 - No draft choices are stored in `savedResponses`. Palette status is derived
   from visited state, committed response and review flag in Phase 1A.
-- No credentials or personal histories are needed for Phase 0/1A.
+- No credentials or cloud services are needed. Timed attempts stay in browser
+  storage and must never be committed or exported into the public repo.
 - Node 24 LTS is selected and verified; the host's default Node 20 was not used for
   final checks. A temporary runtime was installed outside the repository.
 - A temporary `minimatch ^11.0.1` npm override patches a development-tool advisory;
   remove it once upstream ESLint/typescript-eslint ranges include a patched version.
-- Local rendered tests, lint, types, formatting, build, server startup and HTTP
-  checks are recorded in DEVELOPMENT_LOG. The browser access host was unavailable;
-  actual browser visual/responsive QA remains outstanding.
+- Actual unit/component/domain/store and Playwright results, lint, types, formatting
+  and build evidence are recorded in DEVELOPMENT_LOG. Phase 1B installed Chromium
+  and verified desktop/mobile journeys and screenshots; prior browser-host limits
+  did not prevent this explicit Playwright workflow.
+- The local clock/storage are not security guarantees. Last-observed time is
+  monotonic within an attempt, but deliberate manipulation remains possible. Use
+  one active tab; storage events are synchronized but writes are not transactional.
+- Submitted responses are frozen; repeated submission/ticks do not alter the
+  timestamp or create another result record. Accurate scores require matched
+  current question revisions and validated internal keys.
 
-## References read for Phase 0 and rechecked for Phase 1A
+## References (product specification rechecked for Phase 1B)
 
 - [GitHub implementation](https://github.com/cleanerAbhigyan/rbi-mock-app)
 - [Notion product specification](https://app.notion.com/p/410504b1d5b68152b201dc8f784e3468)

@@ -1,29 +1,29 @@
-# Architecture — Phase 0 and Phase 1A
+# Architecture — Phases 0, 1A and 1B
 
 This is one local-first client application, independent of `question-predictor`.
 No server, authentication, cloud storage, deployment or cross-repository runtime
-dependency is needed. Catalog and demo-session state are in memory, not durable storage.
+dependency is needed. Catalog and untimed-demo state are in memory. The latest timed practice uses validated localStorage.
 
 ## Modules
 
 | Module                   | Responsibility                                                                   |
 | ------------------------ | -------------------------------------------------------------------------------- |
 | `src/main.tsx`           | React StrictMode startup and BrowserRouter                                       |
-| `src/app`                | App composition, dashboard/catalog routes, not-found recovery                    |
+| `src/app`                | App composition, untimed/timed/catalog routes, recovery guards                   |
 | `src/components/layout`  | Header, navigation, skip link, route focus/title, disclaimer                     |
 | `src/components/ui`      | Shared official-pattern notice                                                   |
 | `src/features/exam`      | Dashboard, instructions, candidate UI, demo profile and pure session transitions |
 | `src/features/questions` | Catalog UI and QuestionRepository interface                                      |
 | `src/data/question-bank` | Empty real catalog and validating local adapter                                  |
 | `src/data/fixtures`      | Original synthetic test-only questions                                           |
-| `src/data/demo`          | Separate validated runtime demonstration examples and candidate projection       |
-| `src/schemas`            | Zod question, scored eligibility and verified-PYQ contracts                      |
-| `src/stores`             | Zustand catalog read model and demo-session command adapter                      |
+| `src/data/demo`          | Separate demo examples, candidate projection and internal key provider           |
+| `src/schemas`            | Zod question/catalog gates and strict timed persistence contract                 |
+| `src/stores`             | Zustand catalog/demo adapters, timed clock/storage boundary                      |
 | `src/types`              | Future profile/attempt/response/result contracts                                 |
 | `src/styles`             | Tailwind and responsive light-mode CSS                                           |
 | `tests`                  | Rendered application behavior and data admission tests                           |
 
-No empty results/services/lib modules have been introduced. Add those when an
+Results live in the timed feature; no empty services/lib modules have been introduced. Add those when an
 implementation needs them.
 
 ## Data flow
@@ -45,7 +45,8 @@ runtime demo examples → objective schema 1.0 + stricter demo metadata/batch ch
 
 Every record in a load must pass; failures throw rather than silently filtering
 invalid entries. An invalid checked-in catalog blocks loading and must be corrected
-before release. There is no end-user import screen or runtime recovery UI yet.
+before release. There is no end-user question import screen or catalog recovery UI yet. Timed
+attempt recovery is a separate boundary below.
 Catalog validation tests run in CI before build.
 
 ## Question boundaries
@@ -106,15 +107,18 @@ and test fixtures remain separate. See [Data contract](DATA_CONTRACT.md).
 `types/exam.ts` defines profiles, sections, attempts, draft/saved responses, review
 flags, palette status and objective result shapes. Profile source status separates
 awaiting-official-notification, verified-reference and custom-practice profiles.
-The only populated profile is explicitly custom and untimed (null section durations),
-with no official timing assumption or 2027 rule.
+Both populated profiles are custom: the untimed profile uses null durations, and
+the separate timed profile uses configured example durations. Neither contains
+an official timing assumption or 2027 rule.
 
 An unsaved `DraftResponse` is ephemeral and may contain a selected option or null.
 A `SavedResponse` records an explicitly committed option, question revision and
 save timestamp. Absence from `savedResponses` means no committed answer. An attempt
-captures profile/question revision and scoring snapshots for future auditability;
-future timed `ExamAttempt` creation, persistence, timers and scoring remain unimplemented.
-The current `DemoSession` intentionally has no deadline, submission or result fields.
+captures profile/question revision and scoring snapshots for auditability.
+The untimed `DemoSession` intentionally has no deadline, submission or result fields.
+Phase 1B uses a separate strict Zod-inferred timed contract rather than changing the
+untimed state shape. The older broad ExamAttempt/ExamResult interfaces remain a
+future general-purpose contract; the current implementation is the custom timed flow below.
 
 | Palette status                   | Implemented derivation                       |
 | -------------------------------- | -------------------------------------------- |
@@ -137,15 +141,15 @@ route focus/title updates and true disabled exam controls provide the basics.
 The desktop two-column layout stacks at narrower widths; the header and cards
 wrap on mobile. No performance history or dummy attempts are displayed.
 Candidate radio groups and section tabs support keyboard use (arrows/Home/End for
-tabs). Rendered-route/keyboard tests pass. Desktop/mobile visual QA could not run
-because the browser access host was unavailable; responsive CSS is not evidence of
-an actual browser visual test. No timer, submit control or results are displayed.
+tabs). Rendered-route/keyboard tests pass. Phase 1A originally lacked browser-host access. Phase 1B adds Playwright Chromium
+verification at desktop and mobile viewports, including actual screenshot inspection.
+The untimed demo still has no timer, submission control or results.
 
 ## Tooling and delivery
 
 Node 24 LTS and npm lock dependencies. Strict TypeScript checks src/tests/Vite
 configuration. GitHub Actions installs with `npm ci` and runs lint, types,
-formatting, tests and production build on push/PR. Workflow permissions are
+formatting, unit/component tests, production build and Playwright Chromium journeys on push/PR. Workflow permissions are
 `contents: read`; checkout credentials are not persisted. No deployment or secrets.
 
 The dependency override for `minimatch ^11.0.1` addresses
@@ -157,3 +161,64 @@ The separate predictor may eventually publish a versioned JSON package for human
 review and import. The current application neither calls it nor shares code with
 it. Notion holds intended requirements and study progress; GitHub holds verified
 implementation. Neither source automatically synchronizes with the other.
+
+## Phase 1B timed practice
+
+Routes: `/demo/timed/instructions`, `/demo/timed/exam`, `/demo/timed/results`.
+The dashboard has separate untimed and timed entry links. Instructions require
+acknowledgment and show the custom 60-second duration for each of four sections,
++1/−0.25 marking and recovery limitations. None are official RBI settings.
+
+`timed/profile.ts` defines a versioned custom profile and candidate projections.
+`timed/engine.ts` is pure: the clock is passed in, and each command first reconciles
+absolute section windows calculated cumulatively from the original start time.
+Windows are half-open `[start, deadline)`: at the exact boundary expiry wins over
+saving. Delayed ticks skip elapsed windows without granting fresh time. At final
+expiry, submission is stamped with the original final deadline, not wake-up time.
+Observed time never moves backwards within a stored attempt. This is still a local
+wall clock and cannot provide a security guarantee against deliberate manipulation.
+
+Only the derived current section is editable. Past and future navigation commands
+are rejected in the domain, not just disabled visually. Phase 1A transitions are
+reused over the active section's question subset, so Save/Next clamps at its last
+question. A boundary-crossing command is discarded, and UI commands identify their
+editor so stale events cannot edit a newly opened question. Visited/saved/review
+state remains keyed by question ID. Drafts are discarded at expiry and route exit.
+
+`schemas/timed-attempt.ts` describes the strict persisted DTO; `timed/persistence.ts`
+validates it against the current profile/question revision and content snapshots,
+schedule, IDs/options, visited/lock state and save/submission timestamps. Drafts and
+solutions are never serialized. Corrupt/unsupported/incompatible records remain
+unscored until an explicit reset of this application's one storage key.
+
+`stores/timed-practice-store.ts` injects clock, storage and ID creation, adapts pure
+transitions and writes the latest active/completed record. Hydration restores the
+editor from committed responses and reconciles all elapsed deadlines before use.
+An active mock cannot restart to reset time. Beginning a new mock after completion
+explicitly replaces the latest result; this is not an attempt-history system.
+Storage failures block new starts or display a warning during an active attempt.
+Storage events refresh other mounted timed views, but localStorage is not a
+transactional multi-tab service: use one active tab.
+
+`use-timed-lifecycle.ts` requests reconciliation on interval, focus and visibility
+changes. Its interval never decrements an authoritative counter. A final submitted
+attempt is immutable to all subsequent commands/ticks. The native modal dialog
+provides focus containment, Escape cancellation and a final confirmation, while
+timing continues. Manual submission discards drafts and freezes committed responses;
+a simultaneous final timeout wins. No scoring side effect runs during submission.
+
+`data/demo/demo-scoring-repository.ts` validates original demo keys separately from
+candidate projections and from scored/PYQ catalog approval. The pure
+`timed/scoring.ts` rejects pre-submit access and mismatched saved IDs/revisions/options.
+It uses integer hundredths for at-most-two-decimal weights, scores reviewed saved
+answers normally, and treats unsaved/unanswered review as zero. Results are derived
+from the single finalized record, so repeated submission cannot duplicate result
+records or change timestamps. The result page alone requests keys/solutions after
+its submission guard; they never appear in candidate props or state. Client bundles
+remain inspectable, as expected for local personal practice.
+
+Playwright runs production profiles with a controlled browser clock rather than a
+production bypass. Desktop/mobile Chromium tests cover refresh, section locks,
+manual confirmation, multiple missed deadlines, automatic submission and results,
+and retain untimed coverage. Unit/store/component tests inject clocks/storage;
+UI tests fake Date/intervals while leaving user-event async scheduling real.

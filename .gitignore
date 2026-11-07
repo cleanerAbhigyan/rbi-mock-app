@@ -9,3 +9,5 @@ coverage/
 .DS_Store
 *.log
 private-data/
+test-results/
+playwright-report/

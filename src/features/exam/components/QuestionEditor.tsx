@@ -9,6 +9,7 @@ export function QuestionEditor({
   globalIndex,
   totalQuestions,
   dispatch,
+  timed = false,
 }: {
   question: DemoQuestion;
   session: DemoSession;
@@ -16,6 +17,7 @@ export function QuestionEditor({
   globalIndex: number;
   totalQuestions: number;
   dispatch: (action: DemoCommand) => void;
+  timed?: boolean;
 }) {
   const radioGroupId = useId();
   const savedOption =
@@ -28,7 +30,10 @@ export function QuestionEditor({
     <section className="panel question-editor" aria-label="Active question">
       <div className="question-meta">
         <span>Question {sectionNumber}</span>
-        <span>Demo marks: {question.marks ?? 'not set'} · Unscored</span>
+        <span>
+          Demo marks: {question.marks ?? 'not set'} ·{' '}
+          {timed ? `Incorrect: −${question.negativeMarks}` : 'Unscored'}
+        </span>
       </div>
       <h2 id="question-text">{question.text}</h2>
       <fieldset className="answer-options" aria-describedby="response-state">
@@ -129,8 +134,9 @@ export function QuestionEditor({
       </div>
       {last ? (
         <p className="last-question-note">
-          Last question. Save and review actions stay here; this demo has no
-          submission.
+          {timed
+            ? 'Last question in this section. Save and review stay here until the section deadline.'
+            : 'Last question. Save and review actions stay here; this demo has no submission.'}
         </p>
       ) : null}
     </section>
