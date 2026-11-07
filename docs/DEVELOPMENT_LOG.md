@@ -348,7 +348,17 @@ predictor integration, accounts, deployment and Notion synchronization remain pl
 
 ### Commit / GitHub evidence
 
-Implementation commit subject: `feat: implement Phase 1B timed demo and scoring`.
-Source, tests, current docs and sanitized prompt are committed together. Exact SHA,
-verified push, existing PR #1 head and fresh CI result are recorded after creation;
-this pre-commit record does not assume a successful push.
+- Implementation commit: `1ee8067718bb8a5d356efc03a448eff636ecb623`
+  (`feat: implement Phase 1B timed demo and scoring`). Source, tests, docs and prompt
+  were committed together across 41 changed files.
+- Push to `origin/feat/phase-0-foundation` succeeded; `git ls-remote` verified the
+  exact SHA above and the worktree was clean. No new branch or PR was created.
+- Existing [PR #1](https://github.com/cleanerAbhigyan/rbi-mock-app/pull/1) reflected
+  that head, stayed open/unmerged, and its title/description now covers actual
+  foundation, untimed and timed engine scope. No main merge or Notion write.
+- [GitHub CI run 42387248489](https://github.com/cleanerAbhigyan/rbi-mock-app/actions/runs/42387248489)
+  completed successfully: install, lint, types, formatting, unit/component tests,
+  production build, Chromium installation and Playwright journeys all passed.
+- This follow-up documentation commit records the known implementation SHA and
+  verified delivery/CI evidence. Its own final SHA and push verification are given
+  in the completion message rather than a self-referential commit identifier.

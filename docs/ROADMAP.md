@@ -5,16 +5,16 @@ Status definitions: **completed** means delivered and locally verified;
 verification limits are in [Development log](DEVELOPMENT_LOG.md). Continue all work
 on `feat/phase-0-foundation` / PR #1; do not merge without explicit user approval.
 
-| Phase                                        | Status            | Scope                                                                                                                                                                                      |
-| -------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 0 — Foundation & architecture                | Completed         | Runnable shell/routes, empty catalog, strict schema/admission, test fixtures, types, tooling/CI and docs                                                                                   |
-| 1A — Candidate interface & answer management | Completed         | Instructions/agreement, guarded untimed/unscored demo, 12 original questions/four sections, drafts vs saved responses, navigation/save/review/clear, five derived palette states and tests |
-| 1B — Timing, submission & scoring            | Completed locally | Absolute deadlines/locks, validated refresh recovery, idempotent submission, exact objective scoring and desktop/mobile browser coverage                                                   |
-| 2 — Reviewed PYQs & official profiles        | Planned           | Human-reviewed provenance/keys/licensing, deduplication and catalog intake; official-source profiles, 2027 only after notice                                                               |
-| 3 — Completed-attempt continuity             | Planned           | Versioned local completed history, immutable question/profile snapshots and post-test review                                                                                               |
-| 4 — Phase II                                 | Planned           | Objective/descriptive schema extension, writing editor, manual rubric and verified paper profiles                                                                                          |
-| 5 — Analysis & study workflow                | Planned           | Genuine completed-attempt analytics, mistakes and targeted practice; optional authorized export                                                                                            |
-| 6 — Independent predictor interchange        | Planned           | Versioned JSON envelope, human approval and separate generated-practice catalog; no direct runtime coupling                                                                                |
+| Phase                                        | Status    | Scope                                                                                                                                                                                      |
+| -------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 0 — Foundation & architecture                | Completed | Runnable shell/routes, empty catalog, strict schema/admission, test fixtures, types, tooling/CI and docs                                                                                   |
+| 1A — Candidate interface & answer management | Completed | Instructions/agreement, guarded untimed/unscored demo, 12 original questions/four sections, drafts vs saved responses, navigation/save/review/clear, five derived palette states and tests |
+| 1B — Timing, submission & scoring            | Completed | Absolute deadlines/locks, validated refresh recovery, idempotent submission, exact objective scoring and desktop/mobile browser coverage                                                   |
+| 2 — Reviewed PYQs & official profiles        | Planned   | Human-reviewed provenance/keys/licensing, deduplication and catalog intake; official-source profiles, 2027 only after notice                                                               |
+| 3 — Completed-attempt continuity             | Planned   | Versioned local completed history, immutable question/profile snapshots and post-test review                                                                                               |
+| 4 — Phase II                                 | Planned   | Objective/descriptive schema extension, writing editor, manual rubric and verified paper profiles                                                                                          |
+| 5 — Analysis & study workflow                | Planned   | Genuine completed-attempt analytics, mistakes and targeted practice; optional authorized export                                                                                            |
+| 6 — Independent predictor interchange        | Planned   | Versioned JSON envelope, human approval and separate generated-practice catalog; no direct runtime coupling                                                                                |
 
 ## Current evidence and limits
 
