@@ -185,6 +185,16 @@ After implementation and passing relevant checks:
 5. Inspect GitHub Actions and fix failures caused by this work when possible. Report any pending checks.
 6. Do not create a new branch or PR, do not merge to `main`, and do not force push.
 
+## Mandatory report publication for ChatGPT review
+
+The user does not want to paste the final Codex report into ChatGPT. GitHub is the handoff.
+
+- Create or update `docs/reports/2026-11-07-phase-2a-completion.md` with the *actual* Phase 2A implementation and verification report. Include what was and was not delivered, file list, accurate import/PYQ counts, scripts, tests and results, local browser QA if performed, known caveats, branch and push/CI confirmation. Do not claim successful tests or commits that did not happen.
+- Replace the pending placeholder in `docs/CODEX_LATEST_REPORT.md` with status, a relative link to that dated report, a link to this task prompt, a summary of real changes, and GitHub CI and commit links where known. Use a pending label if CI has not finished. If push fails, explicitly say the report is local-only and explain the blocker.
+- Update `docs/CODEX_NEXT_TASK.md` to `Completed — awaiting next task` only after real implementation/verification; don't initiate a subsequent milestone without user instructions.
+- Commit and push the report and index together with implementation code, tests and documentation on `Feature`. You cannot write a commit's final SHA into that same commit; avoid self-referential SHA loops. Recording the implementation commit or a branch-head link is sufficient.
+- Keep the final local Codex reply concise. The user will tell ChatGPT **"Review the latest GitHub work"**, and ChatGPT will independently read the current reports, source, GitHub status and CI.
+
 ## 11. Completion report
 
 Provide:
