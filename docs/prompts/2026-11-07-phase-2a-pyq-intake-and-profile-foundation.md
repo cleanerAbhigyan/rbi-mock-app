@@ -6,13 +6,13 @@
 
 **Repository:** [cleanerAbhigyan/rbi-mock-app](https://github.com/cleanerAbhigyan/rbi-mock-app)
 
-**Existing branch:** `feat/phase-0-foundation`  
-**Existing PR:** [#1](https://github.com/cleanerAbhigyan/rbi-mock-app/pull/1)
+**Existing branch:** `Feature`  
+**Prior merged PR:** [#1](https://github.com/cleanerAbhigyan/rbi-mock-app/pull/1) (historical, already merged into `main`)
 
 ## 1. Mandatory starting checks
 
 1. Stay inside `~/projects/rbi-app/rbi-mock-app`. Check `pwd`, `git status -sb`, `git remote -v`, current branch, and upstream. Preserve any uncommitted changes and do not overwrite others' work.
-2. **Do not create a branch or PR.** Continue only on `feat/phase-0-foundation`; update existing PR #1 via normal pushes. Do **not** merge into `main`, force-push, or rewrite history.
+2. **Do not create a branch or PR.** Continue only on `Feature`; PR #1 has already merged into `main`. Push new work to `Feature` and wait for the user's direction before creating a new PR or merging. Do **not** force-push or rewrite history.
 3. Read `AGENTS.md`, `README.md`, `docs/PROJECT_CONTEXT.md`, `docs/ARCHITECTURE.md`, `docs/DATA_CONTRACT.md`, `docs/ROADMAP.md`, `docs/DEVELOPMENT_LOG.md` and relevant existing implementation/tests.
 4. Inspect the actual source code and full Phase 0, 1A, 1B behavior before extending it. The current baseline includes 12 original demo questions, an empty verified-PYQ catalog, an untimed demo, and a custom timed/scored demo. Maintain their working functionality.
 5. Relevant canonical Notion product specifications, if the agent can read them:
@@ -178,10 +178,10 @@ npm run test:e2e
 Also run any new intake/profile validation checks and document their outcomes. If a check cannot run, report the real blocker.
 
 After implementation and passing relevant checks:
-1. Confirm still on `feat/phase-0-foundation`.
+1. Confirm still on `Feature`.
 2. Review changes, check for secrets and source-material rights.
 3. Commit code, tests, docs and status update together on the **existing branch**.
-4. Push to `origin/feat/phase-0-foundation`, verify remote commit SHA, and update existing PR #1 automatically.
+4. Push to `origin/Feature` and verify the remote SHA. PR #1 is already merged and will not update.
 5. Inspect GitHub Actions and fix failures caused by this work when possible. Report any pending checks.
 6. Do not create a new branch or PR, do not merge to `main`, and do not force push.
 
@@ -193,7 +193,7 @@ Provide:
 3. Current approved real-PYQ count, with no invented data.
 4. Validation tests, Playwright and browser QA results.
 5. Docs updated and current task status.
-6. Branch, implementation commit SHA, remote push verification and PR #1 status.
+6. Branch, implementation commit SHA, remote push verification and any new PR status (none unless user requested).
 7. GitHub Actions run/result and known limitations.
 8. Recommendation for a future milestone, explicitly not implemented.
 
