@@ -1,4 +1,4 @@
-/** Contracts only: no official timing, scoring, or 2027 profile is supplied. */
+/** Shared contracts: no official timing, scoring, or 2027 profile is supplied. */
 export type QuestionStatus =
   | 'not-visited'
   | 'not-answered'
@@ -12,7 +12,8 @@ export interface ExamSection {
   id: string;
   title: string;
   questionIds: readonly string[];
-  durationSeconds: number;
+  /** null explicitly represents untimed practice; never infer an official duration. */
+  durationSeconds: number | null;
   navigation: 'free' | 'sequential-locked';
 }
 

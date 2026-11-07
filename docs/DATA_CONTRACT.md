@@ -39,13 +39,13 @@ file paths and copyrighted source documents out of the public repository.
 
 ## Source categories
 
-| Stored category               | Meaning                                                                                 |
-| ----------------------------- | --------------------------------------------------------------------------------------- |
-| `actual-pyq`                  | Claim of an original historical question; verified-PYQ label requires the stricter gate |
-| `memory-based-reconstruction` | Recalled/reconstructed text, never promoted to actual PYQ                               |
-| `coaching-reconstruction`     | Coaching-source reconstruction, never promoted to actual PYQ                            |
-| `original-practice`           | Original human-authored practice, including explicitly separated test fixtures          |
-| `llm-generated-practice`      | Generated original practice; never a historical PYQ                                     |
+| Stored category               | Meaning                                                                                      |
+| ----------------------------- | -------------------------------------------------------------------------------------------- |
+| `actual-pyq`                  | Claim of an original historical question; verified-PYQ label requires the stricter gate      |
+| `memory-based-reconstruction` | Recalled/reconstructed text, never promoted to actual PYQ                                    |
+| `coaching-reconstruction`     | Coaching-source reconstruction, never promoted to actual PYQ                                 |
+| `original-practice`           | Original practice, including explicitly labeled code-authored synthetic development examples |
+| `llm-generated-practice`      | Generated original practice; never a historical PYQ                                          |
 
 `verified` means a reviewer has checked content, source classification, key and
 scoring evidence. `approved` means a human has authorized inclusion after review,
@@ -68,11 +68,44 @@ a revision bump and renewed review/approval before release.
    IDs (including two revisions of one ID), and throws on any failure. It neither
    drops failures nor rewrites statuses/categories. Returned snapshots are copied.
 
-The live `verified-pyqs.json` is `[]`. It is the only current application dataset.
+The live `verified-pyqs.json` is still `[]`. The runtime demo is a separate dataset.
 The two developer fixtures are original, explicitly synthetic and marked
 `developer-fixture`; they fail scored and verified-PYQ admission even with approved
 test metadata. Tests also construct synthetic metadata candidates to exercise the
 gate; those are not real question records and never ship as catalog data.
+
+## Phase 1A runtime demonstration boundary
+
+The question schema remains **1.0 with no changes**; neither scored nor PYQ
+admission was relaxed. `src/data/demo/demo-questions.ts` supplies 12 original,
+code-authored synthetic interaction examples, three per Phase I section. These are
+development content, not historical questions, human-reviewed keys, predictor
+exports or an implemented generated-practice pipeline.
+
+All demo records use `source.category: original-practice`, `year: null`,
+`verificationStatus: unverified` and `approvalStatus: pending`, with an explicit
+synthetic source citation and no original question number. Their existing
+`usage: catalog` value means runtime content rather than developer fixtures; it
+does not grant approval. They fail both scored and verified-PYQ admission.
+Demo weights (one mark, zero penalty) are custom example metadata; no scoring is
+performed and they are not official RBI rules.
+
+`createDemoQuestionRepository(unknown)` first applies a stricter extension of the
+existing objective schema, requiring the demo metadata above and the four named
+sections. It rejects duplicates, malformed batches and sets lacking multiple
+questions in any section. It returns defensive copies through the separate
+`DemoQuestionRepository.listDemoQuestions()` interface; it cannot add to
+`QuestionRepository.listVerifiedPyqs()`.
+
+Candidate projections include only ID/revision, section, text, options and demo
+weights. Correct keys, explanations, provenance details and topic hints are
+excluded from this presentation boundary. Original development records still ship
+in client source/bundles: this is a personal-practice visibility boundary, not a
+secrecy or anti-cheating guarantee.
+
+`ExamSection.durationSeconds` now permits **null** to explicitly represent untimed
+practice. The demo profile has no year, uses custom-practice source status and
+free navigation. No official timing/profile or question-format migration was added.
 
 ## Future interchange boundary — proposal only, not an importer
 
@@ -94,4 +127,4 @@ Unknown source types must be rejected rather than coerced to historical PYQs.
 
 No sibling source imports, shared runtime package, predictor API, JSON import UI,
 CSV/PDF extraction or Notion synchronization is implemented. This document describes
-the future boundary without promising those capabilities in version 0.1.0.
+the future boundary without promising those capabilities in Phase 1A.

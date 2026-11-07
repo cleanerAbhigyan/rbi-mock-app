@@ -1,8 +1,7 @@
 # Project Context — Exam Simulator
 
-_Phase 0 implementation record: 2026-11-06 (America/Los_Angeles). Earlier planning
-recorded the separate-repository decision with a 2026-11-07 date; that decision is
-preserved below. Only the delivered foundation described here is implemented._
+_Updated 2026-11-07 (America/Los_Angeles): Phase 0 foundation and Phase 1A
+untimed, unscored candidate interaction demo are implemented. Phase 1B remains planned._
 
 ## Project
 
@@ -12,6 +11,8 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
 
 - Working folder: `~/projects/rbi-app/rbi-mock-app`
 - Source repository: `cleanerAbhigyan/rbi-mock-app`
+- Active branch: `feat/phase-0-foundation`; reuse existing PR #1 for all milestones.
+  No new branches/PRs or automatic merge into main; merge needs explicit user approval.
 - Future producer (separate repo): `cleanerAbhigyan/question-predictor`
 - No monorepo, common workspace package, direct runtime coupling, or premature model integration.
 
@@ -25,8 +26,10 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
 
 - Standalone React/TypeScript/Vite application with Tailwind CSS, React Router,
   Zustand, Zod, Vitest/Testing Library, ESLint and Prettier; npm lockfile, Node 24 LTS.
-- Routes `/` (dashboard), `/question-bank` (catalog), and a recoverable not-found screen.
-- All three future exam choices are disabled and labeled not implemented.
+- Routes `/` (dashboard), `/question-bank` (catalog), `/demo/instructions` and
+  guarded `/demo/exam`, plus a recoverable not-found screen.
+- The full exam options remain unavailable. A separate **Try Phase I Demo** link
+  opens instructions and a required agreement before beginning a fresh session.
 - Empty verified-PYQ catalog and count **0**; no papers were imported from Notion.
 - Persistent visible disclaimer and unverified 2027 pattern notice; no 2027 rules.
 - Objective question schema `1.0`, source/verification/approval fields, scored
@@ -35,8 +38,19 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
 - Two original synthetic developer fixtures are used only in tests. A synthetic
   metadata candidate in schema tests exercises PYQ admission without asserting
   historical authenticity; it never enters the application catalog.
-- ExamProfile, ExamSection, ExamAttempt, DraftResponse, SavedResponse,
-  QuestionStatus, ReviewFlag and ExamResult are type contracts only.
+- Twelve original runtime demo questions (three per Phase I section) use a
+  separate validated provider and explicit synthetic labels. They are unverified
+  and pending approval for scoring; neither scored nor PYQ admission was changed.
+- Pure immutable demo transitions separate visits, active draft, saved response
+  records and independent review flags. All five statuses/counts are derived.
+- Palette/section/previous/next navigation discards unsaved edits and restores
+  committed responses; save/review/clear and independent review removal work.
+  Clear keeps review flags, and save keeps flags until explicitly removed.
+- Candidate data excludes keys/explanations and topic hints. Section tabs and radio
+  controls support keyboard navigation; the last question never auto-submits.
+- Shared profile/response/status types support the interaction demo. Timed
+  ExamAttempt and ExamResult remain future contracts. Null section duration
+  explicitly represents the custom untimed profile; no official 2027 scheme.
 - CI checks lint/types/format/tests/build on push and pull request, with read-only
   repository permissions and no deployment.
 
@@ -44,9 +58,13 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
 
 `src/app` composes routes; `components/layout` owns navigation and the independence
 notice; `components/ui` owns the profile notice; `features/exam` renders the
-dashboard; `features/questions` renders the catalog and defines QuestionRepository.
+dashboard, instructions and candidate UI, with pure `demo-session` transitions and
+shared presentation components. `features/questions` defines the separate
+QuestionRepository and DemoQuestionRepository contracts and catalog UI.
 `data/question-bank` supplies the empty JSON catalog through validation;
-`data/fixtures` is test-only. `schemas`, `stores`, `types`, `styles` and `main.tsx`
+`data/demo` owns the original runtime examples and validating candidate projection;
+`data/fixtures` remains test-only. `stores/demo-session-store.ts` adapts commands
+and supplies commit timestamps. `schemas`, `stores`, `types`, `styles` and `main.tsx`
 cover validation, in-memory read state, future contracts, appearance and startup.
 `tests` holds UI and data tests. `.github/workflows/ci.yml` runs checks. `docs`
 contains the architecture, data contract, roadmap, development log and sanitized
@@ -54,12 +72,13 @@ prompt. Unused results/lib directories have not been created.
 
 ## Not implemented / next milestone
 
-Phase 1: build and test a Phase I synthetic demo experience with explicit
-draft-vs-saved behavior and all five palette statuses, then source-backed timing,
-navigation locks, submission and scoring. Add Playwright when those flows exist.
-No timer, exam interactions, scoring, attempt persistence, import UI, offline
-installation, descriptive editor, analytics, backend or deployment exists yet.
-Real scored PYQs still require reviewed source evidence and redistribution rights.
+Phase 1B: add profile-driven timing/section locks, refresh-safe deadlines, explicit
+submission and objective scoring, with browser end-to-end tests. The current demo
+has no countdown, submission, scoring, completed history or persistent attempts.
+Reloading clears the session; navigating away discards its draft. Beginning again
+clears the old session. No import UI, descriptive editor, analytics, backend,
+deployment or Notion synchronization exists. Real scored PYQs still require human
+review of provenance, answer keys, scoring and redistribution rights.
 
 ## Important decisions and verification
 
@@ -67,9 +86,9 @@ Real scored PYQs still require reviewed source evidence and redistribution right
   review is required before granting verified/approved metadata.
 - TypeScript/Zod share a single runtime contract. Structural validity does not imply
   scored eligibility; review-stage null keys/scoring remain outside scored banks.
-- No draft choices are stored in `savedResponses`. Palette status will be derived
-  from visited state, committed response and review flag in Phase 1.
-- No credentials or personal histories are needed for Phase 0.
+- No draft choices are stored in `savedResponses`. Palette status is derived
+  from visited state, committed response and review flag in Phase 1A.
+- No credentials or personal histories are needed for Phase 0/1A.
 - Node 24 LTS is selected and verified; the host's default Node 20 was not used for
   final checks. A temporary runtime was installed outside the repository.
 - A temporary `minimatch ^11.0.1` npm override patches a development-tool advisory;
@@ -78,7 +97,7 @@ Real scored PYQs still require reviewed source evidence and redistribution right
   checks are recorded in DEVELOPMENT_LOG. The browser access host was unavailable;
   actual browser visual/responsive QA remains outstanding.
 
-## References read for Phase 0
+## References read for Phase 0 and rechecked for Phase 1A
 
 - [GitHub implementation](https://github.com/cleanerAbhigyan/rbi-mock-app)
 - [Notion product specification](https://app.notion.com/p/410504b1d5b68152b201dc8f784e3468)

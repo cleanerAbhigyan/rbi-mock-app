@@ -6,7 +6,16 @@ export function AppLayout() {
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    document.title = `${pathname === '/question-bank' ? 'Question bank' : 'Dashboard'} | RBI Grade B Mock Exam Simulator`;
+    const title =
+      (
+        {
+          '/': 'Dashboard',
+          '/question-bank': 'Question bank',
+          '/demo/instructions': 'Demo instructions',
+          '/demo/exam': 'Phase I demo',
+        } as Record<string, string>
+      )[pathname] ?? 'Page not found';
+    document.title = `${title} | RBI Grade B Mock Exam Simulator`;
     mainRef.current?.focus();
   }, [pathname]);
 
@@ -54,7 +63,7 @@ export function AppLayout() {
           Independent personal practice. Not official RBI or IBPS software; not
           affiliated with or endorsed by either organization.
         </p>
-        <span>Foundation · v0.1.0</span>
+        <span>Phase 1A · Interaction demo</span>
       </footer>
     </div>
   );

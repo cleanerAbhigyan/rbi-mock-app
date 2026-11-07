@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import { PatternNotice } from '../../components/ui/PatternNotice';
 import { useQuestionBankStore } from '../../stores/question-bank-store';
+import { demoQuestions } from './demo-profile';
 
 const examOptions = [
   {
     number: '01',
     title: 'RBI Grade B — Phase I',
-    detail: 'The foundation for your first-stage exam practice.',
+    detail:
+      'Full timed mock exams are planned. Try the separate interaction demo above.',
     label: 'Phase I practice',
   },
   {
@@ -38,6 +40,22 @@ export function Dashboard() {
         </p>
       </div>
       <PatternNotice />
+      <section
+        className="demo-entry panel"
+        aria-labelledby="demo-entry-heading"
+      >
+        <div>
+          <p className="eyebrow">DEMO PRACTICE — NOT ACTUAL RBI PYQs</p>
+          <h2 id="demo-entry-heading">Try the Phase I candidate interface</h2>
+          <p>
+            {demoQuestions.length} original demo questions across four sections.
+            Practice saving and reviewing answers — untimed and unscored.
+          </p>
+        </div>
+        <Link className="primary-button" to="/demo/instructions">
+          Try Phase I Demo
+        </Link>
+      </section>
       <div className="dashboard-grid">
         <div className="space-y-8">
           <section aria-labelledby="exam-options-heading">
@@ -97,9 +115,11 @@ export function Dashboard() {
           </section>
         </div>
         <aside className="readiness-panel" aria-labelledby="readiness-heading">
-          <span className="foundation-badge">PHASE 0</span>
+          <span className="foundation-badge">PHASE 1A</span>
           <h2 id="readiness-heading">A deliberate start.</h2>
-          <p>The workspace is ready. The exam experience is the next step.</p>
+          <p>
+            The interaction demo is ready. Timed and scored exams come later.
+          </p>
           <ol className="milestones">
             <li>
               <span className="step-icon complete" aria-hidden="true">
@@ -117,8 +137,10 @@ export function Dashboard() {
               </span>
               <div>
                 <h3>Phase I experience</h3>
-                <p>Draft and saved answers, timing and review.</p>
-                <span className="step-state">Next milestone · planned</span>
+                <p>Demo navigation, draft and saved answers, and review.</p>
+                <span className="step-state">
+                  Interaction demo available · timing planned
+                </span>
               </div>
             </li>
             <li>

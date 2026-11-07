@@ -119,3 +119,110 @@ rendering and interaction behavior, not pixel-level or mobile visual verificatio
 Next milestone: implement and test Phase I draft/saved response transitions and
 five palette statuses using a clearly labeled synthetic demo bank, then extend to
 the rest of the Phase I flow and Playwright coverage.
+
+## 2026-11-07 — Phase 1A: Candidate Interface & Answer Management
+
+Prompt: [sanitized full implementation brief](prompts/2026-11-07-phase-1a-candidate-interface.md).
+Branch: `feat/phase-0-foundation`; existing PR #1 is reused. No branch or PR was
+created and no merge was performed. Starting worktree was clean at `7dc31e5`.
+Fetch comparison showed 0 ahead / 0 behind; fast-forward pull was already up to date.
+All existing context/architecture/contract/roadmap/log documentation was read, as
+were the three current Notion references. No Notion edits were made.
+
+### Delivered behavior
+
+- Dashboard entry **Try Phase I Demo** → `/demo/instructions` → agreement-gated
+  Begin Demo → `/demo/exam`. Direct exam visits without a session redirect safely.
+- Custom, untimed, unscored profile: 12 original synthetic runtime examples across
+  the four Phase I sections, with **DEMO PRACTICE — NOT ACTUAL RBI PYQs** labels.
+- Section tabs, radio answers, previous/next, palette navigation, Save & Next,
+  Mark for Review & Next, Clear Response and explicit Remove Review Flag work.
+- Visits, current draft, saved responses and review flags are independent. Drafts
+  never count as answered or silently save. Navigation discards edits and restores
+  older committed answers. All five palette states and section counts are derived.
+- Saving keeps review flags; clearing removes draft/saved responses while retaining
+  a review flag. Removing a flag preserves saved and draft choices.
+- Section tabs open the first question in a section. Previous/Next and save/review
+  cross section boundaries in profile order; first/last limits are safe. Last-question
+  save/review stays there without wrapping or submitting.
+- Candidate projections omit keys, explanations and topic hints. Real PYQs remain
+  empty, and test fixtures stay isolated. Demo content is unverified/pending and
+  fails scored/PYQ admission; no existing question schema rule was weakened.
+- Radio/section keyboard interactions, active indicators, textual/symbol statuses,
+  visible focus and responsive candidate CSS are implemented.
+
+### Architecture and changed files
+
+- Domain: `src/features/exam/demo-session.ts` holds pure immutable transitions,
+  status/count derivation and a separate untimed `DemoSession` shape. The store
+  supplies timestamps; presentation does not implement answer-saving rules.
+- Data/profile: `src/data/demo/demo-questions.ts`,
+  `src/data/demo/local-demo-repository.ts`,
+  `src/features/questions/demo-question-repository.ts`,
+  `src/features/exam/demo-profile.ts`. The separate demo repository validates entire
+  sets, rejects duplicate IDs/missing sections/wrong metadata and returns defensive
+  candidate projections. Navigation follows explicit profile section order.
+- State: `src/stores/demo-session-store.ts`; no persistence middleware. Begin Demo
+  clears prior state. Leaving the candidate route discards only its draft; reload
+  clears the session. `src/types/exam.ts` now permits null duration for untimed
+  sections without altering future deadline/submission/result contracts.
+- Presentation: `src/features/exam/DemoInstructions.tsx`, `DemoExam.tsx`,
+  `components/PaletteLegend.tsx`, `components/QuestionEditor.tsx`,
+  `components/QuestionPalette.tsx`, `components/SectionTabs.tsx`,
+  `components/palette-states.ts`; updated `Dashboard.tsx`, `src/app/router.tsx`,
+  `src/components/layout/AppLayout.tsx`, `src/main.tsx`; added `src/styles/demo.css`.
+- Tests: `tests/demo-session.test.ts`, `tests/demo-repository.test.ts`,
+  `tests/demo-app.test.tsx`. Original Phase 0 tests were preserved unchanged.
+- Documentation: README, AGENTS, PROJECT_CONTEXT, ARCHITECTURE, DATA_CONTRACT,
+  ROADMAP, CHANGELOG, this log and the full archived prompt. Existing single-branch
+  policy was preserved; one runtime-demo boundary rule was added to AGENTS.
+- Unchanged: question schema 1.0, verified-PYQ repository/catalog, test fixtures,
+  package versions, lockfile and CI workflow. No dependency was added.
+
+### Actual verification
+
+Node 24.22.2 (temporary runtime already present under `/tmp`), npm 9.2.0.
+
+| Check                                     | Outcome                                                                                                                           |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `npm ci`                                  | Passed, 245 packages installed from committed lockfile                                                                            |
+| `npm run lint`                            | Passed, zero warnings                                                                                                             |
+| `npm run typecheck`                       | Passed after correcting new test typings and command-union narrowing                                                              |
+| `npm run format` / `npm run format:check` | Formatting applied; final pre-commit check passed                                                                                 |
+| `npm test`                                | Passed: 79 tests in 5 files; 49 retained Phase 0 tests and 30 new domain/provider/UI tests                                        |
+| `npm run build`                           | Passed: 143 modules; JS 375.20 kB (115.31 kB gzip), CSS 21.00 kB (5.67 kB gzip)                                                   |
+| Local startup                             | Vite 8.3.6 ready at `http://127.0.0.1:5173/`; stopped after checks                                                                |
+| HTTP smoke                                | 200 for `/`, `/demo/instructions`, `/demo/exam` entry HTML and transformed DemoExam module; client guard tested separately in RTL |
+| Isolation                                 | Production source/bundle scan excludes fixture imports, fixture IDs and fixture question text                                     |
+| Scope check                               | `git diff --exit-code` confirmed schema, real bank, fixtures, package and lockfile unchanged                                      |
+| Secret/material review                    | Scoped token/private-key/environment-file checks passed; no private attempts or source papers added                               |
+| `git diff --check`                        | Passed                                                                                                                            |
+| Browser desktop/mobile QA                 | Unavailable: browser inventory returned “The browser access host is unavailable”; no visual test claimed                          |
+
+Tests cover fresh starts/guards/agreement, all sections and questions, keyboard
+selection/navigation, unsaved isolation, old-answer restoration, clearing/review
+independence, every palette state/count, boundary behavior, hidden keys/explanations,
+validation/source separation and provider snapshot isolation. An initial command
+union typing issue and two test typing issues were corrected before the passing
+checks. No failing tests remain.
+
+### Limits and next milestone
+
+This completes only Phase 1A's interaction demo. There are no timers, section
+locks, refresh-safe deadlines, persistence, final submission, scoring, results,
+completed history, real-PYQ import, Phase II, generation/predictor integration,
+Notion synchronization, auth, backend or deployment. Visual browser QA is still a
+verification limitation. Client-bundled source data is inspectable; stripping
+keys from candidate projections is not an anti-cheating guarantee.
+
+Phase 1B should begin with profile-driven timing/section-lock transitions and
+refresh-safe deadline tests, followed by submission/scoring over committed answers
+and browser E2E coverage. Use a custom demo profile until official source rules
+are reviewed. Phase 1 as a whole remains incomplete.
+
+### Commit and push evidence
+
+Implementation commit subject: `feat: implement Phase 1A exam interaction demo`.
+Source, tests, documentation and prompt are committed together. Exact commit,
+verified remote SHA, existing PR #1 head and CI outcome are appended once available;
+this pre-commit record does not assume a successful push.

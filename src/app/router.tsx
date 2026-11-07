@@ -1,6 +1,8 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import { AppLayout } from '../components/layout/AppLayout';
 import { Dashboard } from '../features/exam/Dashboard';
+import { DemoInstructions } from '../features/exam/DemoInstructions';
+import { DemoExam } from '../features/exam/DemoExam';
 import { QuestionBankPage } from '../features/questions/QuestionBankPage';
 
 export function AppRouter() {
@@ -9,6 +11,8 @@ export function AppRouter() {
       <Route element={<AppLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="question-bank" element={<QuestionBankPage />} />
+        <Route path="demo/instructions" element={<DemoInstructions />} />
+        <Route path="demo/exam" element={<DemoExam />} />
         <Route
           path="*"
           element={

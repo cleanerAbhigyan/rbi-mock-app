@@ -1,5 +1,16 @@
 # Changelog
 
+## Phase 1A — 2026-11-07
+
+- Added instructions/agreement and guarded Phase I demo routes with 12 original
+  runtime demonstration questions across four sections; untimed and unscored.
+- Added draft/saved response separation, navigation, save/review/clear actions,
+  independent review removal, five derived palette states and per-section counts.
+- Added keyboard-accessible radio/section controls and responsive candidate styles.
+- Preserved the empty verified-PYQ catalog and test-fixture isolation; candidate
+  projections omit answer keys/explanations. No timers, submission or scoring.
+- Added domain, demo-provider and rendered-flow tests and updated current docs.
+
 ## 0.1.0 — 2026-11-06
 
 - Added the standalone React/TypeScript/Vite foundation and light-mode dashboard.
