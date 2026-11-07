@@ -39,3 +39,18 @@ Phase 0 conventions:
 - Preserve Phase 0 boundaries in `docs/DATA_CONTRACT.md`; expand schema versions explicitly when adding descriptive questions or import formats.
 - **Current branch policy (updated 2026-11-07):** Continue new work on the existing `Feature` branch. The prior PR #1 was merged into `main`; do not reopen or push updates to that merged PR. Do not create additional branches or PRs unless the user explicitly requests one. Never merge into `main` without the user's approval. The previous branch name `feat/phase-0-foundation` is retired; do not push new work there.
 - Code, tests, sanitized prompt history and current docs belong in the same implementation commit, followed by a verified push.
+
+## GitHub-first Codex handoff (required for every implementation task)
+
+The user does **not** want to copy completion reports between VS Code and ChatGPT.
+GitHub is the handoff channel. After each milestone, Codex must:
+
+1. Create a sanitized, dated report in `docs/reports/YYYY-MM-DD-<milestone>-completion.md`. Reuse an existing file for the same milestone rather than duplicating it. Report actual work, implemented routes/features, files changed, verified question counts, validation commands and outcomes, browser QA evidence/limitations, known blockers, and next proposed work.
+2. Update `docs/CODEX_LATEST_REPORT.md` as the **stable entry point**. It must name the latest milestone and completion status, link to the dated report, reference the relevant task prompt and development-log entry, state the current branch `Feature`, and give the confirmed push/CI status with links where known. Never claim green CI until verified. If pending, mark **pending** and link to the run; update after checks finish when feasible.
+3. Update `docs/CODEX_NEXT_TASK.md` to **Completed — awaiting next task** only when the task is actually implemented and validated. Do not select the next task autonomously.
+4. Commit code, tests, docs, dated report and latest-report pointer together; push to `origin/Feature` and verify the remote commit. A commit cannot reliably contain its own final SHA; link to the current `Feature` branch head or record an earlier implementation commit. Avoid repeated self-referential follow-up commits just to embed their own SHA.
+5. If tests, push or verification are blocked, report the truthful partial/pending status in the repository where possible, and mention the blocker in the final local Codex reply. Never invent success or embed secrets, private attempts, non-redistributable papers, or excessive raw logs.
+
+After Codex pushes, the user's only chat message can be **"Review the latest GitHub work"**. ChatGPT will fetch `docs/CODEX_LATEST_REPORT.md`, the linked dated report, current commits, source and CI directly. ChatGPT does **not** monitor GitHub continuously; the user still needs to tell ChatGPT when to review.
+
+The reports supplement—not replace—review of actual committed source, tests, and GitHub Actions. Do not create another branch or PR and do not merge into `main` unless the user explicitly requests it.
