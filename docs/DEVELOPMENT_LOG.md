@@ -222,7 +222,17 @@ are reviewed. Phase 1 as a whole remains incomplete.
 
 ### Commit and push evidence
 
-Implementation commit subject: `feat: implement Phase 1A exam interaction demo`.
-Source, tests, documentation and prompt are committed together. Exact commit,
-verified remote SHA, existing PR #1 head and CI outcome are appended once available;
-this pre-commit record does not assume a successful push.
+- Implementation commit: `9c30aade2c423f981aa8e73cfde1f806ab8bc4be`
+  (`feat: implement Phase 1A exam interaction demo`). Source, tests, documentation
+  and archived prompt were committed together across 31 changed files.
+- Push to `origin/feat/phase-0-foundation` succeeded. `git ls-remote` verified the
+  exact remote SHA above; the worktree was clean after the push.
+- Existing [PR #1](https://github.com/cleanerAbhigyan/rbi-mock-app/pull/1) reflected
+  that head SHA and remained open/unmerged. Its title/description were updated to
+  cover the actual foundation and Phase 1A scope. No new branch/PR was created.
+- [GitHub CI run 42364082941](https://github.com/cleanerAbhigyan/rbi-mock-app/actions/runs/42364082941)
+  completed successfully: install, lint, typecheck, format check, tests and build
+  all passed on the GitHub runner.
+- This follow-up documentation commit records the now-known implementation SHA,
+  push/PR evidence and CI result. Its own final SHA and verified push are reported
+  in the completion message to avoid a self-referential commit ID.
