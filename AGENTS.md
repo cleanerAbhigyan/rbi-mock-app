@@ -2,7 +2,7 @@
 
 This is an independent repository. Do **not** restructure it into a monorepo or create a nested Git repository. The sibling `../question-predictor` has its own GitHub remote and roadmap.
 
-**Active development branch: `feat/phase-0-foundation` — maintain PR #1 until reviewed for a deliberate merge. Do not create more branches.**
+**Active development branch: `Feature`. PR #1 was merged into `main` on 2026-11-07. Use `Feature` for future development.**
 
 Before coding:
 
@@ -37,5 +37,5 @@ Phase 0 conventions:
 - Runtime demo content uses the separate `DemoQuestionRepository` under `src/data/demo` and never enters `listVerifiedPyqs`. Synthetic timed practice may use the separate validated internal demo-key provider without granting scored-catalog or historical approval. Preserve pure draft/saved/review transitions and derive palette status; do not persist duplicate status fields.
 - Timed commands must reconcile absolute deadlines before editing, reject locked/stale editors, and preserve final-submission idempotency. Persist only validated versioned attempts without drafts or solutions; incompatible records require explicit recovery. Run `npm run test:e2e` with Chromium when changing timed flows, in addition to fast checks.
 - Preserve Phase 0 boundaries in `docs/DATA_CONTRACT.md`; expand schema versions explicitly when adding descriptive questions or import formats.
-- **Current branch policy (user instruction 2026-11-07):** Reuse the existing `feat/phase-0-foundation` branch for ALL upcoming development phases; do not create a new branch or a new PR for each phase. Push successive implementations to the same branch so that existing PR #1 stays updated. Do not automatically merge it to `main`. Review/merge only after the user agrees that a stable, tested milestone is ready. Once merged, ask before changing the agreed branch workflow. If the local checkout is on `main`, switch to the existing remote feature branch safely without overwriting changes.
+- **Current branch policy (updated 2026-11-07):** Continue new work on the existing `Feature` branch. The prior PR #1 was merged into `main`; do not reopen or push updates to that merged PR. Do not create additional branches or PRs unless the user explicitly requests one. Never merge into `main` without the user's approval. The previous branch name `feat/phase-0-foundation` is retired; do not push new work there.
 - Code, tests, sanitized prompt history and current docs belong in the same implementation commit, followed by a verified push.
