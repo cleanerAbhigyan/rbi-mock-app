@@ -2,6 +2,8 @@
 
 This is an independent repository. Do **not** restructure it into a monorepo or create a nested Git repository. The sibling `../question-predictor` has its own GitHub remote and roadmap.
 
+**Active development branch: `feat/phase-0-foundation` — maintain PR #1 until reviewed for a deliberate merge. Do not create more branches.**
+
 Before coding:
 
 1. Read `README.md` and `docs/PROJECT_CONTEXT.md`, and any existing roadmap and development log.
@@ -33,4 +35,5 @@ Phase 0 conventions:
 - Run `npm run lint`, `npm run typecheck`, `npm run format:check`, `npm test`, and `npm run build` before committing substantive changes.
 - Question-bank consumers use `QuestionRepository`; never import `src/data/fixtures` into application modules. Keep admission validation strict and atomic.
 - Preserve Phase 0 boundaries in `docs/DATA_CONTRACT.md`; expand schema versions explicitly when adding descriptive questions or import formats.
-- Use a feature branch and reviewable PR where practical. Never automatically merge into `main`. Code, tests, sanitized prompt history and current docs belong in the same implementation commit, followed by a verified push.
+- **Current branch policy (user instruction 2026-11-07):** Reuse the existing `feat/phase-0-foundation` branch for ALL upcoming development phases; do not create a new branch or a new PR for each phase. Push successive implementations to the same branch so that existing PR #1 stays updated. Do not automatically merge it to `main`. Review/merge only after the user agrees that a stable, tested milestone is ready. Once merged, ask before changing the agreed branch workflow. If the local checkout is on `main`, switch to the existing remote feature branch safely without overwriting changes.
+- Code, tests, sanitized prompt history and current docs belong in the same implementation commit, followed by a verified push.
