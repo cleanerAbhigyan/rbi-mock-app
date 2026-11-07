@@ -2,8 +2,8 @@
 
 Status definitions: **completed** means delivered and locally verified;
 **planned** makes no implementation claim. Evidence, commit/push results and
-verification limits are in [Development log](DEVELOPMENT_LOG.md). Continue all work
-on `feat/phase-0-foundation` / PR #1; do not merge without explicit user approval.
+verification limits are in [Development log](DEVELOPMENT_LOG.md). PR #1 was
+merged into `main`; continue new development on `Feature` without automatic merges.
 
 | Phase                                        | Status    | Scope                                                                                                                                                                                      |
 | -------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
