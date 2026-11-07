@@ -11,8 +11,9 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
 
 - Working folder: `~/projects/rbi-app/rbi-mock-app`
 - Source repository: `cleanerAbhigyan/rbi-mock-app`
-- Active branch: `feat/phase-0-foundation`; reuse existing PR #1 for all milestones.
-  No new branches/PRs or automatic merge into main; merge needs explicit user approval.
+- Active development branch: `Feature` (renamed workflow, 2026-11-07).
+  PR #1 was merged into `main` at `5b939ee`; future work uses `Feature`.
+  No new PR or merge without explicit user approval.
 - Future producer (separate repo): `cleanerAbhigyan/question-predictor`
 - No monorepo, common workspace package, direct runtime coupling, or premature model integration.
 
