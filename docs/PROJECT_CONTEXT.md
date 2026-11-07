@@ -99,12 +99,3 @@ Phase II, attempt analytics, source-document extraction, Notion result export, a
 At each implementation milestone: `git status` → pull safely → archive sanitized prompt in `docs/prompts/` → implement/tests → update README, PROJECT_CONTEXT, ROADMAP, DEVELOPMENT_LOG → commit → push → report SHA and test results. Coordinate any factual status updates into Notion only after implementation evidence is available and authorized.
 
 Never expose secrets, private attempt records or non-redistributable papers in this public repository.
-
-
-## Active branch and merge policy — 2026-11-07
-
-- Continue on `feat/phase-0-foundation`. Do not create new branches.
-- Keep updating [PR #1](https://github.com/cleanerAbhigyan/rbi-mock-app/pull/1).
-- Merge to `main` only with user approval after a tested milestone.
-- Phase 0 CI passed at `8398829`; check CI for each new commit.
-- The Phase I exam engine and actual PYQ imports are not yet implemented.
