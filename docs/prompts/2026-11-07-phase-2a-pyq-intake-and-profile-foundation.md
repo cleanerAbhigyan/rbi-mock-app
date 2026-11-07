@@ -6,14 +6,14 @@
 
 **Repository:** [cleanerAbhigyan/rbi-mock-app](https://github.com/cleanerAbhigyan/rbi-mock-app)
 
-**Existing branch:** \`feat/phase-0-foundation\`  
+**Existing branch:** `feat/phase-0-foundation`  
 **Existing PR:** [#1](https://github.com/cleanerAbhigyan/rbi-mock-app/pull/1)
 
 ## 1. Mandatory starting checks
 
-1. Stay inside \`~/projects/rbi-app/rbi-mock-app\`. Check \`pwd\`, \`git status -sb\`, \`git remote -v\`, current branch, and upstream. Preserve any uncommitted changes and do not overwrite others' work.
-2. **Do not create a branch or PR.** Continue only on \`feat/phase-0-foundation\`; update existing PR #1 via normal pushes. Do **not** merge into \`main\`, force-push, or rewrite history.
-3. Read \`AGENTS.md\`, \`README.md\`, \`docs/PROJECT_CONTEXT.md\`, \`docs/ARCHITECTURE.md\`, \`docs/DATA_CONTRACT.md\`, \`docs/ROADMAP.md\`, \`docs/DEVELOPMENT_LOG.md\` and relevant existing implementation/tests.
+1. Stay inside `~/projects/rbi-app/rbi-mock-app`. Check `pwd`, `git status -sb`, `git remote -v`, current branch, and upstream. Preserve any uncommitted changes and do not overwrite others' work.
+2. **Do not create a branch or PR.** Continue only on `feat/phase-0-foundation`; update existing PR #1 via normal pushes. Do **not** merge into `main`, force-push, or rewrite history.
+3. Read `AGENTS.md`, `README.md`, `docs/PROJECT_CONTEXT.md`, `docs/ARCHITECTURE.md`, `docs/DATA_CONTRACT.md`, `docs/ROADMAP.md`, `docs/DEVELOPMENT_LOG.md` and relevant existing implementation/tests.
 4. Inspect the actual source code and full Phase 0, 1A, 1B behavior before extending it. The current baseline includes 12 original demo questions, an empty verified-PYQ catalog, an untimed demo, and a custom timed/scored demo. Maintain their working functionality.
 5. Relevant canonical Notion product specifications, if the agent can read them:
    - [Exam Experience App](https://app.notion.com/p/410504b1d5b68152b201dc8f784e3468)
@@ -25,7 +25,7 @@
 
 Implement a robust **source-evidence, human-review, and question-import foundation** for future real RBI Grade B previous-year questions, plus a **source-backed exam-profile definition and validation framework**.
 
-There are currently **zero reviewed real PYQs**. This is expected. **Do not manufacture questions, guess answer keys, or mark fake records as verified merely to demonstrate the pipeline.** Keep \`src/data/question-bank/verified-pyqs.json\` empty unless independently provided legitimate material with evidence and redistribution permission is actually available and reviewed.
+There are currently **zero reviewed real PYQs**. This is expected. **Do not manufacture questions, guess answer keys, or mark fake records as verified merely to demonstrate the pipeline.** Keep `src/data/question-bank/verified-pyqs.json` empty unless independently provided legitimate material with evidence and redistribution permission is actually available and reviewed.
 
 Do not interpret a year/phase placeholder in Notion as an imported paper. Do not infer the official 2027 exam scheme from prior years.
 
@@ -33,7 +33,7 @@ The implementation should be useful when real licensed source material arrives, 
 
 ## 3. Preserve strict provenance
 
-Preserve the existing \`src/schemas/question.ts\` version 1.0 contract where possible. Do not weaken scored-question or verified-PYQ admission rules.
+Preserve the existing `src/schemas/question.ts` version 1.0 contract where possible. Do not weaken scored-question or verified-PYQ admission rules.
 
 Distinguish clearly:
 - Officially sourced/independently verified actual PYQ.
@@ -46,7 +46,7 @@ Only actual historical questions that passed **independent human evidence review
 
 The candidate exam does not display keys, provenance hints, explanations, or correctness information before submission in strict mode.
 
-Schema validity is **not** evidence of historical authenticity. A self-declared \`verificationStatus: verified\` or \`approvalStatus: approved\` in an imported file is **not itself approval**.
+Schema validity is **not** evidence of historical authenticity. A self-declared `verificationStatus: verified` or `approvalStatus: approved` in an imported file is **not itself approval**.
 
 ## 4. Introduce source-manifest and review contracts
 
@@ -141,7 +141,7 @@ Do **not** add:
 - Unapproved copyrighted/redistribution-restricted question-paper contents to the public repo.
 - Unverified 2027 exam profiles, eligibility, dates or paper details.
 - Automated scraping, OCR, paid-content bypass or LLM prediction.
-- \`question-predictor\` repo coupling, monorepo, shared workspace, cloud database, authentication or deployment.
+- `question-predictor` repo coupling, monorepo, shared workspace, cloud database, authentication or deployment.
 - Phase II descriptive editor or a full question-editing CMS.
 - Changes to Notion records or fabricated mock attempt history.
 - A merged PR.
@@ -150,22 +150,22 @@ Do **not** add:
 
 Update the existing files accurately:
 
-- \`README.md\`
-- \`AGENTS.md\` only when new rules are needed
-- \`docs/PROJECT_CONTEXT.md\`
-- \`docs/ARCHITECTURE.md\`
-- \`docs/DATA_CONTRACT.md\`
-- \`docs/ROADMAP.md\`
-- \`docs/DEVELOPMENT_LOG.md\`
-- \`CHANGELOG.md\`
+- `README.md`
+- `AGENTS.md` only when new rules are needed
+- `docs/PROJECT_CONTEXT.md`
+- `docs/ARCHITECTURE.md`
+- `docs/DATA_CONTRACT.md`
+- `docs/ROADMAP.md`
+- `docs/DEVELOPMENT_LOG.md`
+- `CHANGELOG.md`
 
-Use **this document** as the sanitized task prompt record. Do not create another duplicated prompt. Keep \`docs/CODEX_NEXT_TASK.md\` pointing to this task until completion, then change its status to **completed / awaiting next task**, so the short launcher cannot accidentally rerun it. Do not invent a future implementation spec without authorization.
+Use **this document** as the sanitized task prompt record. Do not create another duplicated prompt. Keep `docs/CODEX_NEXT_TASK.md` pointing to this task until completion, then change its status to **completed / awaiting next task**, so the short launcher cannot accidentally rerun it. Do not invent a future implementation spec without authorization.
 
 Explain ingestion commands, review gate, rights and licensing caveats, source evidence limits, profile registration, tests, actual imported question counts and explicit unimplemented features.
 
 Validate with:
 
-\`\`\`bash
+```bash
 npm ci
 npm run lint
 npm run typecheck
@@ -173,17 +173,17 @@ npm run format:check
 npm test
 npm run build
 npm run test:e2e
-\`\`\`
+```
 
 Also run any new intake/profile validation checks and document their outcomes. If a check cannot run, report the real blocker.
 
 After implementation and passing relevant checks:
-1. Confirm still on \`feat/phase-0-foundation\`.
+1. Confirm still on `feat/phase-0-foundation`.
 2. Review changes, check for secrets and source-material rights.
 3. Commit code, tests, docs and status update together on the **existing branch**.
-4. Push to \`origin/feat/phase-0-foundation\`, verify remote commit SHA, and update existing PR #1 automatically.
+4. Push to `origin/feat/phase-0-foundation`, verify remote commit SHA, and update existing PR #1 automatically.
 5. Inspect GitHub Actions and fix failures caused by this work when possible. Report any pending checks.
-6. Do not create a new branch or PR, do not merge to \`main\`, and do not force push.
+6. Do not create a new branch or PR, do not merge to `main`, and do not force push.
 
 ## 11. Completion report
 
