@@ -1,4 +1,4 @@
-# Architecture — Phases 0, 1A and 1B
+# Architecture — Phases 0, 1A, 1B and 2A
 
 This is one local-first client application, independent of `question-predictor`.
 No server, authentication, cloud storage, deployment or cross-repository runtime
@@ -48,6 +48,8 @@ invalid entries. An invalid checked-in catalog blocks loading and must be correc
 before release. There is no end-user question import screen or catalog recovery UI yet. Timed
 attempt recovery is a separate boundary below.
 Catalog validation tests run in CI before build.
+The live adapter additionally checks source/review/provenance links. Phase 2A's
+Node/CI catalog check recomputes exact content bindings before build, as below.
 
 ## Question boundaries
 
@@ -222,3 +224,56 @@ production bypass. Desktop/mobile Chromium tests cover refresh, section locks,
 manual confirmation, multiple missed deadlines, automatic submission and results,
 and retain untimed coverage. Unit/store/component tests inject clocks/storage;
 UI tests fake Date/intervals while leaving user-event async scheduling real.
+
+## Phase 2A intake and review boundaries
+
+| Module                             | Responsibility                                                                                       |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `schemas/source-intake.ts`         | Independent versioned source, candidate batch, review and provenance contracts                       |
+| `features/intake/pipeline.ts`      | Node-only deterministic normalization, hashing, duplicate flags, promotion and public-content checks |
+| `features/intake/evidence.ts`      | Browser-safe public-ledger parsing and runtime traceability gate                                     |
+| `scripts/intake.ts`                | Local operator CLI; fixed committed evidence input for promotion; atomic private output              |
+| `data/source-review/*.json`        | Empty public source/question-review/profile-review/provenance ledgers                                |
+| `schemas/exam-profile.ts`          | Independent custom/pending/verified reference profile contracts                                      |
+| `features/profiles/registry.ts`    | Browser-safe source/citation/human-review validation and defensive reference loader                  |
+| `features/profiles/check.ts`       | Node-only exact profile/source hash verification                                                     |
+| `data/exam-profiles/profiles.json` | Empty reference-profile registry; no executable exam assembly                                        |
+| `data/source-review/readiness.ts`  | Public-only evidence/registry read model for read-only readiness UI                                  |
+| `tests/fixtures/intake.ts`         | Synthetic positive/negative contract data, never bundled or approved real data                       |
+
+```text
+lawfully held local JSON → strict atomic batch validation → conservative normalization
+  → duplicate/ambiguity flags → ignored private staged record
+original source + keys + scoring + rights → separate human evidence review
+  → sanitized source/review ledgers committed at fixed repository paths
+staged record + fixed HEAD evidence → exact binding/admission gates
+  → single ignored private approved bundle (questions + provenance + review commit)
+  → explicit human-reviewed public catalog/provenance edit
+  → intake:check + ordinary checks → commit/push
+
+public source/review ledgers + reference profiles → browser-safe registry validation
+  → read-only question-bank readiness; Node/CI additionally checks exact fingerprints
+```
+
+No import JSON can carry its own review artifact or approved flags. Promotion never
+writes the live bank; validation errors produce no partial approved output. Manual
+catalog installation requires both arrays and is checked in CI. The live question
+repository requires evidence links; standalone structural factories are testable
+building blocks, not authorization APIs. Review hashes detect stale content but
+cannot prove source authenticity, rights or reviewer identity. Git history and
+human review remain procedural controls. Private source bodies, extracted text,
+staged changes and approved bundles are ignored and never imported by browser code.
+Public normalization acknowledgments contain hashes rather than restricted text.
+
+The independent reference registry is **not** connected to timed execution or
+automatic paper assembly. An eventual official mock needs both a validated matching
+profile and adequate reviewed question bank. Current demos keep their custom source
+status and existing engine behavior. Source profiles cannot imply confirmed 2027
+rules while no matching official evidence exists. Predictor interchange still
+requires a separately agreed versioned contract, not sibling imports.
+
+CI runs `intake:check` in addition to lint/types/format/unit/build/Chromium checks.
+No new dependencies, backend, privileged web UI, scraping, deployment, external
+producer calls or Notion writes were introduced. The CLI uses Node 24 native
+TypeScript with explicit `.ts` imports; hashing/child-process modules remain
+outside the Vite browser dependency graph.

@@ -1,7 +1,7 @@
 # Project Context — Exam Simulator
 
-_Updated 2026-11-07 (America/Los_Angeles): Phases 0, 1A and 1B implement the
-foundation, untimed interaction demo and separate custom timed/scored practice._
+_Updated 2026-11-14 (America/Los_Angeles): Phases 0, 1A, 1B and the Phase 2A
+source-review/intake and independent reference-profile foundation are implemented._
 
 ## Project
 
@@ -33,6 +33,17 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
 - The full exam options remain unavailable. A separate **Try Phase I Demo** link
   opens instructions and a required agreement before beginning a fresh session.
 - Empty verified-PYQ catalog and count **0**; no papers were imported from Notion.
+- Phase 2A adds strict source/candidate/import/review/provenance contracts, atomic
+  normalization/staging, duplicate flags, committed human approval and private
+  reviewed-output generation. The public sources, reviews, traces and reference
+  profiles all remain empty. Runtime catalog loading requires linked evidence;
+  the Node/CI check additionally binds actual content to reviewed fingerprints.
+- `/question-bank` shows read-only readiness and operator instructions. No import
+  editor, file picker, privileged browser promotion or added exam route exists.
+- Independent profile contracts support custom/pending/official-source-verified
+  status, source citations for each pattern fact, exact counts/order/timing,
+  navigation, validity and marking overrides. Neither custom demo is relabeled or
+  wired to this registry. No historical official pattern was cross-checked or added.
 - Persistent visible disclaimer and unverified 2027 pattern notice; no 2027 rules.
 - Objective question schema `1.0`, source/verification/approval fields, scored
   eligibility checks and stricter PYQ checks. Local loader rejects invalid batches
@@ -65,6 +76,7 @@ Build a personal RBI Grade B (DR–General) CBT-style mock examination applicati
   The latest completed record survives refresh; starting another replaces it.
 - CI checks lint/types/format/tests/build on push and pull request, with read-only
   repository permissions, desktop/mobile Playwright Chromium journeys and no deployment.
+  It now also runs `npm run intake:check` against the public registries.
 
 ## Current structure
 
@@ -85,10 +97,17 @@ prompt. `features/exam/timed` owns engine, persistence, scoring and timed UI;
 injects clock/storage/IDs. `e2e` and `playwright.config.ts` exercise real Chromium.
 No empty modules or backend services have been created.
 
+Phase 2A adds `schemas/source-intake.ts` and `schemas/exam-profile.ts`,
+`features/intake/{pipeline,evidence}.ts`, `features/profiles/{registry,check}.ts`,
+empty `data/source-review/*.json` ledgers, `data/exam-profiles/profiles.json`, and
+`scripts/intake.ts`. Pipeline/check/CLI modules are Node-only; readiness loads only
+public metadata and browser-safe validation. `tests/fixtures/intake.ts` is synthetic
+contract-test content only. Private staging is ignored and never bundled.
+
 ## Not implemented / next milestone
 
-Next: reviewed source-backed profiles and human-approved PYQ intake, without
-scraping or claiming unverified 2027 rules. Full history/analytics, Phase II,
+Phase 2A's foundation is delivered; actual licensed source intake and verified
+official reference data remain unimplemented. No next task is selected. Full history/analytics, Phase II,
 prediction/import integration, accounts, cloud services, deployment and Notion
 synchronization remain deferred. Only one latest timed record is retained.
 
@@ -96,6 +115,12 @@ synchronization remain deferred. Only one latest timed record is retained.
 
 - Validation cannot prove historical authenticity: human provenance/answer-key
   review is required before granting verified/approved metadata.
+- Imported flags are rejected. The local CLI uses only committed fixed-path
+  evidence for promotion, with independent human IDs and exact content/source
+  digests. Review artifacts are procedural, not identity/authenticity proof.
+- Public source metadata permission and question-content redistribution permission
+  are explicit; permission to publish a paper file is a separate boolean. No paper
+  files or private extracts are committed, even when metadata can be published.
 - TypeScript/Zod share a single runtime contract. Structural validity does not imply
   scored eligibility; review-stage null keys/scoring remain outside scored banks.
 - No draft choices are stored in `savedResponses`. Palette status is derived
@@ -117,7 +142,7 @@ synchronization remain deferred. Only one latest timed record is retained.
   timestamp or create another result record. Accurate scores require matched
   current question revisions and validated internal keys.
 
-## References (product specification rechecked for Phase 1B)
+## References (product specification rechecked for Phase 2A)
 
 - [GitHub implementation](https://github.com/cleanerAbhigyan/rbi-mock-app)
 - [Notion product specification](https://app.notion.com/p/410504b1d5b68152b201dc8f784e3468)

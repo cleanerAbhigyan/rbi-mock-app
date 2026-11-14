@@ -362,3 +362,53 @@ predictor integration, accounts, deployment and Notion synchronization remain pl
 - This follow-up documentation commit records the known implementation SHA and
   verified delivery/CI evidence. Its own final SHA and push verification are given
   in the completion message rather than a self-referential commit identifier.
+
+## Phase 2A — 2026-11-14
+
+Task: [existing sanitized Phase 2A prompt](prompts/2026-11-07-phase-2a-pyq-intake-and-profile-foundation.md),
+launched from CODEX_NEXT_TASK. This implementation uses the existing `Feature`
+branch; PR #1 is already merged and its historical notes above are not current
+branch instructions. Initial worktree was clean, remote history was fetched and
+`git pull --ff-only origin Feature` confirmed up to date before development.
+
+Delivered strict source/intake/human-review/provenance contracts, atomic private
+staging and reviewed-output generation, fixed committed-ledger approval gates,
+duplicate/ambiguity decisions, runtime trace links and Node/CI content checks.
+Added a separate reference-profile framework with fact-level source citations,
+human review and ordering/count/timing/navigation/marking validation. Read-only
+question-bank readiness shows actual counts and operator steps. The original
+question schema, 12 runtime demos, untimed/timed engines and existing routes remain.
+Public real-PYQ/source/review/profile counts are all **0**; no papers or historical
+patterns were imported. All three Notion references were read, with no writes.
+
+Changed files and detailed decisions are enumerated in the required
+[completion report](reports/2026-11-07-phase-2a-completion.md). Main new areas are
+`schemas/{source-intake,exam-profile}.ts`, `features/{intake,profiles}`, empty
+`data/{source-review,exam-profiles}` registries, `scripts/intake.ts`, four test files,
+synthetic test fixtures and the desktop/mobile source-readiness journey. Updated
+scripts, tsconfig, CI, catalog adapter, question-bank UI/styles and current docs.
+No dependency/lockfile update, new branch, PR, deployment or Notion modification.
+
+Validation with Node 24.22.3 LTS: `npm ci` passed (248 packages, 0 audit findings);
+lint/typecheck/build and `intake:check` passed. **175 tests in 12 files passed**
+(126 existing + 49 new). **10 Chromium journeys passed** (all original 8 + 2 new).
+Build: 167 modules, JS 420.37 kB / 127.11 kB gzip, CSS 23.97 kB / 6.30 kB gzip.
+Inspected desktop/mobile readiness screenshots; no page overflow. Initial CLI
+tests encountered sandbox child-process restrictions; granted execution permission
+allowed the real CLI suite to pass. Formatting, scoped credential/material review,
+production bundle isolation checks and `git diff --check` also passed.
+
+Decisions: raw/staged/bundle data stays ignored/private; only conservative text
+normalization is automatic. Public correction proofs use hashes, not raw text.
+Arbitrary import flags/artifacts cannot self-approve; fixed committed human evidence
+is required, with reviewer distinct from importer/preparer. Approved output does not
+mutate the live catalog: public installation is an explicit reviewed edit of both
+arrays plus CI checks. The independent reference registry does not replace custom
+demo profiles or execute official exams. Review artifacts are procedural and cannot
+prove authenticity/rights/identity; semantic duplicate detection is not guaranteed.
+
+Blockers: no local implementation blocker. Genuine licensed content and independent
+human source review are still prerequisites for future actual data. No next task
+was selected; CODEX_NEXT_TASK is completed/awaiting user direction. Commit, push,
+remote SHA and Actions confirmation are pending and will be recorded after delivery
+in this log and the stable [latest report](CODEX_LATEST_REPORT.md).

@@ -2,6 +2,8 @@ import { z } from 'zod';
 import type { QuestionRepository } from '../../features/questions/question-repository';
 import { verifiedPyqSchema } from '../../schemas/question';
 import rawCatalog from './verified-pyqs.json';
+import { assertCatalogTraceability } from '../../features/intake/evidence';
+import { publicEvidence } from '../source-review/readiness';
 
 const catalogSchema = z
   .array(verifiedPyqSchema)
@@ -30,3 +32,7 @@ export function createLocalQuestionRepository(
 
 export const localQuestionRepository =
   createLocalQuestionRepository(rawCatalog);
+assertCatalogTraceability(
+  localQuestionRepository.listVerifiedPyqs(),
+  publicEvidence,
+);

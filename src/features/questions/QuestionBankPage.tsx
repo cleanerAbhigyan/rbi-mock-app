@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
 import { PatternNotice } from '../../components/ui/PatternNotice';
 import { useQuestionBankStore } from '../../stores/question-bank-store';
+import {
+  referenceProfiles,
+  sourceReadiness,
+} from '../../data/source-review/readiness';
 
 export function QuestionBankPage() {
   const questions = useQuestionBankStore((state) => state.verifiedPyqs);
@@ -52,6 +56,57 @@ export function QuestionBankPage() {
             ))}
           </ul>
         )}
+      </section>
+      <section
+        className="panel catalog-panel mt-8"
+        aria-labelledby="readiness-heading"
+      >
+        <h2 id="readiness-heading">Source and profile readiness</h2>
+        <dl className="readiness-counts">
+          <div>
+            <dt>Public source manifests</dt>
+            <dd>{sourceReadiness.publicSources}</dd>
+          </div>
+          <div>
+            <dt>Approved human question reviews</dt>
+            <dd>{sourceReadiness.approvedReviews}</dd>
+          </div>
+          <div>
+            <dt>Verified official reference profiles</dt>
+            <dd>{sourceReadiness.verifiedProfiles}</dd>
+          </div>
+        </dl>
+        <p className="editor-help">
+          {referenceProfiles.readiness(2027) ===
+          'awaiting-official-notification'
+            ? '2027 profile: awaiting official notification.'
+            : '2027 profile: see reviewed registry evidence.'}{' '}
+          Historical reference profiles await source verification when no
+          matching reviewed entry exists.
+        </p>
+        <h3 className="mt-5">Local operator workflow</h3>
+        <ol className="instruction-list">
+          <li>
+            Validate and stage locally supplied JSON using{' '}
+            <code>npm run intake -- stage INPUT.json</code>. Private staged
+            extracts are not loaded by this browser.
+          </li>
+          <li>
+            A separate human reviewer checks the original source, answer key,
+            scoring, ambiguities and redistribution permission. Imported
+            approval flags cannot grant approval.
+          </li>
+          <li>
+            Promotion requires the fixed, committed review ledger. Generate
+            reviewed output locally, then explicitly review any catalog edit and
+            run <code>npm run intake:check</code>.
+          </li>
+        </ol>
+        <p className="editor-help">
+          This view is read-only. No paper was imported just because a research
+          folder exists. Human artifacts document a procedure; software cannot
+          prove historical authenticity or legal permission.
+        </p>
       </section>
       <section
         className="source-policy"

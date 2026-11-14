@@ -626,3 +626,26 @@ button:disabled {
     padding: 35px 0;
   }
 }
+
+.readiness-counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin: 24px 0;
+}
+.readiness-counts dt {
+  color: #5d6f63;
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+.readiness-counts dd {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-top: 8px;
+}
+@media (max-width: 540px) {
+  .readiness-counts {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

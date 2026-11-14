@@ -1,5 +1,18 @@
 # Changelog
 
+## Phase 2A — 2026-11-14
+
+- Added strict versioned source manifests, candidate batches, human review and
+  public provenance contracts; question schema 1.0 and demo engines are unchanged.
+- Added atomic local JSON staging, conservative normalization, duplicate flags,
+  committed-ledger promotion to private reviewed bundles and CI catalog checks.
+- Added independent custom/pending/official-reference profile contracts and loader
+  with field-level citations, human review and marking/timing validation.
+- Added read-only question-bank readiness, contract/CLI/UI tests and desktop/mobile
+  browser coverage. Real PYQs, public sources/reviews and official profiles remain 0.
+- Updated current documentation and GitHub handoff reports. No scraping, real paper
+  import, predictor integration, deployment or Notion writes.
+
 ## Phase 1B — 2026-11-07
 
 - Added separate custom timed instructions/exam/results routes while preserving
